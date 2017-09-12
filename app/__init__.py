@@ -10,19 +10,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
-
-if os.environ.get('PA_BULD') == 'LIVE':
+if os.environ.get('STOCKY_BULD') == 'LIVE':
     app.config.from_pyfile('config/live.py')
 else:
     app.config.from_pyfile('config/dev.py')
-
 db = SQLAlchemy(app)
 
-# Load all models so the install will work properly. This can be redone better I'm sure
-from app.models.company import Company, CompanyMeta
-from app.models.portfolio import Portfolio
-from app.models.portfolio_event import PortfolioEvent
-from app.models.quote import Quote
+# Helpers
 from app.helpers import misc_time
 from app.helpers import common
 from app.helpers import jinja_filters

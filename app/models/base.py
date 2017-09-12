@@ -9,6 +9,8 @@ base = declarative_base()
 
 class Base(base):
 
+    __abstract__ = True
+
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
