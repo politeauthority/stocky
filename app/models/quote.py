@@ -4,9 +4,10 @@
 from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey, func, UniqueConstraint
 
 from app import db
+from app.models.base import Base
 
 
-class Quote(db.Model):
+class Quote(Base):
 
     __tablename__ = 'quotes'
 

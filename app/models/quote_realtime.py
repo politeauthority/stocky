@@ -4,9 +4,10 @@
 from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey, func, UniqueConstraint
 
 from app import db
+from app.models.base import Base
 
 
-class QuoteRealtime(db.Model):
+class QuoteRealtime(Base):
 
     __tablename__ = 'quotes_realtime'
 

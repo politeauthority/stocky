@@ -5,7 +5,6 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, PickleType, Tex
 from sqlalchemy import UniqueConstraint, ForeignKey
 from sqlalchemy.orm import relationship
 
-from app import db
 from app.models.base import Base
 
 
@@ -38,11 +37,6 @@ class Company(Base):
     def __repr__(self):
         return '<Company %r, %r>' % (self.symbol, self.name)
 
-    def save(self):
-        if not self.id:
-            db.session.add(self)
-        db.session.commit()
-
 
 class CompanyMeta(Base):
 
@@ -59,9 +53,5 @@ class CompanyMeta(Base):
     def __repr__(self):
         return '<CompanyMeta %s, %s>' % (self.key, self.id)
 
-    def save(self):
-        if not self.id:
-            db.session.add(self)
-        db.session.commit()
 
 # End File: stocky/app/models/company.py

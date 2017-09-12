@@ -2,21 +2,25 @@
 
 """
 from sqlalchemy import Column, Integer, DateTime, func
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
-base = declarative_base()
+from app import db
 
 
-class Base(base):
+class Base(db.Model):
 
     __abstract__ = True
-
-    @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
 
     id = Column(Integer, primary_key=True)
     ts_created = Column(DateTime, default=func.current_timestamp())
     ts_updated = Column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp())
+
+    def __init__(self, _id=None):
+        if _id:
+            self.id = _id
+
+    def save(self):
+        if not self.id:
+            db.session.add(self)
+        db.session.commit()
 
 # End File: stocky/app/models/base.py
