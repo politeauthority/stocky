@@ -1,7 +1,7 @@
-if [ "${PA_BUILD}" == "LIVE" ]; then
+if [ "${STOCKY_BUILD}" == "LIVE" ]; then
   RUN_ENV="LIVE"
 else
-  RUN_ENV="${PA_BUILD}"
+  RUN_ENV="${STOCKY_BUILD}"
 fi
 
 if [ RUN_ENV="DEV" ]; then

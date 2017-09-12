@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
-if os.environ.get('STOCKY_BULD') == 'LIVE':
+if os.environ.get('STOCKY_BUILD') == 'LIVE':
     app.config.from_pyfile('config/live.py')
 else:
     app.config.from_pyfile('config/dev.py')

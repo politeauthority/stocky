@@ -4,7 +4,7 @@ from flask import Blueprint, request, render_template, flash, g, session, redire
 """
 
 from flask import Blueprint, render_template
-from sqlalchemy.orm.exc import NoResultFound
+
 from app.collections import companies as cc
 from app.models.company import Company
 from app.models.quote import Quote
