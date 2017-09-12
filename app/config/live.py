@@ -1,10 +1,10 @@
 import os
 
 SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
-    os.environ.get('STOCKY_MYSQL_HOST'),
     os.environ.get('STOCKY_MYSQL_USER'),
     os.environ.get('STOCKY_MYSQL_PASS'),
-    os.environ.get('STOCKY_MYSQL_PORT'),
+    os.environ.get('STOCKY_MYSQL_HOST'),
+    os.environ.get('STOCKY_MYSQL_PORT', 3306),
     os.environ.get('STOCKY_MYSQL_NAME'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 DEBUG = False
@@ -16,4 +16,4 @@ CSRF_SESSION_KEY = "secret"
 
 # Secret key for signing cookies
 SECRET_KEY = "secret"
-PA_APP_DATA_PATH = '/data/'
+APP_DATA_PATH = '/data/'

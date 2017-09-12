@@ -1,19 +1,18 @@
-"""Company
+"""Company - Models
 
 """
-from sqlalchemy import Column, Integer, String, Float, DateTime, UniqueConstraint
-from sqlalchemy import PickleType, Text, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Float, DateTime, PickleType, Text
+from sqlalchemy import UniqueConstraint, ForeignKey
 from sqlalchemy.orm import relationship
+
 from app import db
+from app.models.base import Base
 
 
-class Company(db.Model):
+class Company(Base):
 
     __tablename__ = 'companies'
 
-    id = Column(Integer, primary_key=True)
-    ts_created = Column(DateTime, default=func.current_timestamp())
-    ts_updated = Column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp())
     symbol = Column(String(10), nullable=False)
     name = Column(String(128), nullable=False)
     price = Column(Float, nullable=False)
@@ -26,7 +25,6 @@ class Company(db.Model):
     high_52_weeks_date = Column(DateTime)
     low_52_weeks = Column(Float)
     low_52_weeks_date = Column(DateTime)
-    run_company = Column(Integer)
     meta = relationship('CompanyMeta', back_populates="company")
 
     __table_args__ = (
@@ -46,13 +44,10 @@ class Company(db.Model):
         db.session.commit()
 
 
-class CompanyMeta(db.Model):
+class CompanyMeta(Base):
 
     __tablename__ = 'companies_meta'
 
-    id = Column(Integer, primary_key=True)
-    ts_created = Column(DateTime, default=func.current_timestamp())
-    ts_updated = Column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp())
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
     key = Column(String(256), nullable=False)
     val_type = Column(String(256))
@@ -69,4 +64,4 @@ class CompanyMeta(db.Model):
             db.session.add(self)
         db.session.commit()
 
-# End File: stocks/app/models/company.py
+# End File: stocky/app/models/company.py

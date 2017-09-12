@@ -17,14 +17,13 @@ import csv
 import time
 # from sqlalchemy.exc import importIntegrityError
 
-from politeauthority import common
-
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
 from app.models.company import Company
 from app.models.quote import Quote
 from app.helpers import misc
+from app.helpers import common
 
 download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
@@ -185,4 +184,4 @@ if __name__ == "__main__":
     # get_realtime_quotes()
     get_quotes_from_google()
 
-# End File:
+# End File: stocky/app/data/fetch.py

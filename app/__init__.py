@@ -27,7 +27,10 @@ from app.helpers import misc_time
 from app.helpers import common
 from app.helpers import jinja_filters
 
+# Controllers
 from controllers.home import home as ctrl_home
+from controllers.company import company as ctrl_company
+from controllers.portfolio import portfolio as ctrl_portfolio
 
 
 def register_logging(app):
@@ -53,8 +56,14 @@ def register_jinja_funcs(app):
     app.jinja_env.filters['percentage'] = common.get_percentage
 
 
+def register_blueprints(app):
+    app.register_blueprint(ctrl_home)
+    app.register_blueprint(ctrl_company)
+    app.register_blueprint(ctrl_portfolio)
+
 DebugToolbarExtension(app)
 register_logging(app)
 register_jinja_funcs(app)
-app.register_blueprint(ctrl_home)
+register_blueprints(app)
+
 app.logger.info('Started App!')

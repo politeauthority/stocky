@@ -8,50 +8,50 @@ This will be updated eventually
 ENV Var | Default | Description
 --- | --- | --- 
 ENVIRONMENT VARS
-PA_MYSQL_HOST | MySQL Database Host | None
-PA_MYSQL_USER | MySQL Database User | None
-PA_MYSQL_PASS | MySQL Database Password | None
-PA_BUILD | Build type, set "LIVE" or "DEV"| DEV
+STOCKY_MYSQL_HOST | MySQL Database Host | None
+STOCKY_MYSQL_USER | MySQL Database User | None
+STOCKY_MYSQL_PASS | MySQL Database Password | None
+STOCKY_BUILD | Build type, set "LIVE" or "DEV"| DEV
 PA_APP_DATA_PATH | (optional) Log space, temp space and other disk | /data/
 TZ | The timezone for the container | America/Denver
 
 ## Docker Instructions
 Build the docker container
 ```
-docker build -t pas .
+docker build -t stocky .
 ```
 
 Example development docker run script
 ```
-docker stop pas_dev
-docker rm pas_dev
+docker stop stocky
+docker rm stocky
 docker run \
     --name=pas_dev \
-    -e PA_MYSQL_HOST="127.0.0.1" \
-    -e PA_MYSQL_USER="user" \
-    -e PA_MYSQL_PASS="password" \
-    -e PA_BUILD="DEV" \
+    -e STOCKY_MYSQL_HOST="127.0.0.1" \
+    -e STOCKY_MYSQL_USER="user" \
+    -e STOCKY_MYSQL_PASS="password" \
+    -e STOCKY_BUILD="DEV" \
     -v /Users/alix/pas/:/data/ \
     -v /Users/alix/repos/politeauthority/:/opt/politeauthority/ \
-    -p 5000:5000 \
+    -p 80:80 \
     -td \
-    pas:latest
+    stocky:latest
 ```
 
 Example live deployment
 ```
-docker stop pas
-docker rm pas
+docker stop stocky
+docker rm stocky
 docker run \
     --name=pas \
     -d \
-    -e PA_MYSQL_HOST="127.0.0.1" \
-    -e PA_MYSQL_USER="user" \
-    -e PA_MYSQL_PASS="password" \
-    -e PA_BUILD="LIVE" \
+    -e STOCKY_MYSQL_HOST="127.0.0.1" \
+    -e STOCKY_MYSQL_USER="user" \
+    -e STOCKY_MYSQL_PASS="password" \
+    -e STOCKY_BUILD="LIVE" \
     -e VIRTUAL_HOST=politeauthority.me \
     --restart=always \
-    pas
+    stocky
 ```
 
 The Mysql Container runs like so,

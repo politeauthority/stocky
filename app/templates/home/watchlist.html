@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{%block title%}Watch List{%endblock%}
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Watch List</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <ul>
+                {%for company in companies%}
+                    <li><a href="/company/{{company.symbol}}">{{company.name}}</a></li>
+                {%endfor%}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+

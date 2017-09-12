@@ -6,8 +6,8 @@ sys.path.append("../..")
 from app import app
 from app.models.company import Company
 
-watchlist = ['AAPLE', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR', 'EFX', 'SPYD', 'TSLA', 'NFLX', 'FB', 'DIS',
-             'GPRO', 'SBUX', 'F', 'BABA', 'FIT', 'ABBS', 'INTC', 'TWTR', 'ERIC', 'VMW', 'T', 'EXF']
+watchlist_symbols = ['AAPLE', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR', 'EFX', 'SPYD', 'TSLA', 'NFLX', 'FB',
+                     'DIS', 'GPRO', 'SBUX', 'F', 'BABA', 'FIT', 'ABBS', 'INTC', 'TWTR', 'ERIC', 'VMW', 'T', 'EXF']
 
 
 def by_symbols(symbols):
@@ -18,10 +18,18 @@ def by_symbols(symbols):
     :return: Company objects
     :rtype: SqlAlchemey result of company objects.
     """
+    print symbols
     companies = Company.query.filter(Company.symbol.in_(symbols)).all()
     return companies
 
-def watchlist():
-    return by_symbols(watchlist)
 
-# End File: stocks/app/collections/companies.py
+def watchlist():
+    """
+    Gets the watchlist Company objects all loaded up.
+
+    :return: Company objects
+    :rtype: SqlAlchemey result of company objects
+    """
+    return by_symbols(watchlist_symbols)
+
+# End File: stocky/app/collections/companies.py

@@ -1,4 +1,4 @@
-"""Quote
+"""Quote - Models
 
 """
 from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey, func, UniqueConstraint
@@ -14,12 +14,12 @@ class Quote(db.Model):
     ts_created = Column(DateTime, default=func.current_timestamp())
     ts_updated = Column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp())
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
-    open = Column(Float)
+    date = Column(DateTime, nullable=False)
     close = Column(Float, nullable=False)
+    open = Column(Float)
     high = Column(Float)
     low = Column(Float)
     volume = Column(Float)
-    date = Column(DateTime, nullable=False)
 
     __table_args__ = (
         UniqueConstraint('company_id', 'date', name='uix_1'),
@@ -44,4 +44,4 @@ class Quote(db.Model):
             db.session.add(self)
         db.session.commit()
 
-# End File: stocks/app/models/company.py
+# End File: stocks/app/models/quote.py
