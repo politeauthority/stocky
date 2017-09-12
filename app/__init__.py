@@ -9,10 +9,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 
-from politeauthority import misc_time
-from politeauthority import common
-from helpers import jinja_filters
-
 app = Flask(__name__)
 
 if os.environ.get('PA_BULD') == 'LIVE':
@@ -21,10 +17,15 @@ else:
     app.config.from_pyfile('config/dev.py')
 
 db = SQLAlchemy(app)
+
+# Load all models so the install will work properly. This can be redone better I'm sure
 from app.models.company import Company, CompanyMeta
 from app.models.portfolio import Portfolio
 from app.models.portfolio_event import PortfolioEvent
 from app.models.quote import Quote
+from app.helpers import misc_time
+from app.helpers import common
+from app.helpers import jinja_filters
 
 from controllers.home import home as ctrl_home
 
@@ -50,6 +51,7 @@ def register_jinja_funcs(app):
     app.jinja_env.filters['fmt_date'] = misc_time.fmt_date
     app.jinja_env.filters['fmt_currency'] = jinja_filters.format_currency
     app.jinja_env.filters['percentage'] = common.get_percentage
+
 
 DebugToolbarExtension(app)
 register_logging(app)

@@ -1,13 +1,11 @@
 import os
-from politeauthority import environmental
 
-mysql_conf = environmental.mysql_conf()
 SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
-    mysql_conf['user'],
-    mysql_conf['pass'],
-    mysql_conf['host'],
-    3306,
-    'stocks2')
+    os.environ.get('STOCKY_MYSQL_HOST'),
+    os.environ.get('STOCKY_MYSQL_USER'),
+    os.environ.get('STOCKY_MYSQL_PASS'),
+    os.environ.get('STOCKY_MYSQL_PORT'),
+    os.environ.get('STOCKY_MYSQL_NAME'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 DEBUG = True
 TESTING = True
