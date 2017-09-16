@@ -22,6 +22,12 @@ def index():
     return render_template('home/index.html')
 
 
+@home.route('search')
+def search():
+    d = {}
+    return render_template('home/search_results.html', **d)
+
+
 @home.route('dashboard')
 def dashboard():
     """

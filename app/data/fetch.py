@@ -112,7 +112,7 @@ def get_quotes_from_google():
 
     if not os.path.exists(download_path):
         os.makedirs(download_path)
-    companies = cc.watchlist()
+    companies = cc.all()
     companies_to_run = len(companies)
     count = 0
     for company in companies:

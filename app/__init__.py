@@ -32,15 +32,9 @@ def register_logging(app):
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
     app_log_file = os.path.join(log_dir, 'stocky.log')
-    logging.basicConfig(filename=app_log_file, level=logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler = TimedRotatingFileHandler(
-        app_log_file,
-        when='midnight',
-        backupCount=20)
-    file_handler.setLevel(logging.DEBUG)
-    file_handler.setFormatter(formatter)
-    app.logger.addHandler(file_handler)
+    handler = TimedRotatingFileHandler(app_log_file, when='midnight', interval=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
 
 
 def register_jinja_funcs(app):

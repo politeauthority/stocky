@@ -3,7 +3,7 @@
 """
 import sys
 sys.path.append("../..")
-from app import app
+
 from app.models.company import Company
 
 watchlist_symbols = ['AAPLE', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR', 'EFX', 'SPYD', 'TSLA', 'NFLX', 'FB',
@@ -31,5 +31,15 @@ def watchlist():
     :rtype: SqlAlchemey result of company objects
     """
     return by_symbols(watchlist_symbols)
+
+
+def all():
+    """
+    Gets all companies in the database
+
+    :return: Company objects
+    :rtype: SqlAlchemey result of company objects
+    """
+    return Company.query.all()
 
 # End File: stocky/app/collections/companies.py
