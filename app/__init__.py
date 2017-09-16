@@ -1,4 +1,5 @@
 """App
+Main file for the entire flask app.
 
 """
 import os
@@ -8,6 +9,7 @@ from logging.handlers import TimedRotatingFileHandler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
+import flask_restless
 
 app = Flask(__name__)
 if os.environ.get('STOCKY_BUILD') == 'LIVE':
@@ -15,6 +17,9 @@ if os.environ.get('STOCKY_BUILD') == 'LIVE':
 else:
     app.config.from_pyfile('config/dev.py')
 db = SQLAlchemy(app)
+
+from app.models.company import Company
+from app.models.quote import Quote
 
 # Helpers
 from app.helpers import misc_time
@@ -25,6 +30,7 @@ from app.helpers import jinja_filters
 from controllers.home import home as ctrl_home
 from controllers.company import company as ctrl_company
 from controllers.portfolio import portfolio as ctrl_portfolio
+from controllers.test import test as ctrl_test
 
 
 def register_logging(app):
@@ -48,10 +54,18 @@ def register_blueprints(app):
     app.register_blueprint(ctrl_home)
     app.register_blueprint(ctrl_company)
     app.register_blueprint(ctrl_portfolio)
+    app.register_blueprint(ctrl_test)
+
+
+def register_api(app):
+    manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
+    manager.create_api(Company, methods=['GET'])
+    manager.create_api(Quote, methods=['GET'])
 
 DebugToolbarExtension(app)
 register_logging(app)
 register_jinja_funcs(app)
 register_blueprints(app)
+register_api(app)
 
 app.logger.info('Started App!')

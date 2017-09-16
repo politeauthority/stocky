@@ -1,4 +1,4 @@
-#PoliteAuthority Stocks (pas)
+# PoliteAuthority Stocks (pas)
 Stock application to view and track portfolios. Currently up at https://politeauthority.me
 note: because of a current issue getting the run.sh script to run via Dockers 'CMD' tool you have to run another command after the container is started.
 This will be updated eventually
@@ -7,7 +7,6 @@ This will be updated eventually
 ## Environmental Vars
 ENV Var | Default | Description
 --- | --- | --- 
-ENVIRONMENT VARS
 STOCKY_MYSQL_HOST | MySQL Database Host | None
 STOCKY_MYSQL_USER | MySQL Database User | None
 STOCKY_MYSQL_PASS | MySQL Database Password | None
