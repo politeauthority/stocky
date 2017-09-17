@@ -47,6 +47,7 @@ class CompanyMeta(Base):
     val_type = Column(String(256))
     val_string = Column(Text())
     val_pickle = Column(PickleType())
+    val_int = Column(Integer)
     val_date = Column(DateTime)
     company = relationship("Company", back_populates="meta")
 

@@ -18,7 +18,6 @@ def by_symbols(symbols):
     :return: Company objects
     :rtype: SqlAlchemey result of company objects.
     """
-    print symbols
     companies = Company.query.filter(Company.symbol.in_(symbols)).all()
     return companies
 

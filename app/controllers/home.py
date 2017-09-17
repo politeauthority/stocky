@@ -19,7 +19,13 @@ def index():
     Nothing really here yet.
 
     """
-    return render_template('home/index.html')
+    d = {}
+    d['data_stats'] = {
+        'total_companies': Company.query.count(),
+        'total_quotes': Quote.query.count(),
+        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10)
+    }
+    return render_template('home/dashboard.html', **d)
 
 
 @home.route('search')

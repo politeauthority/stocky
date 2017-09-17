@@ -12,9 +12,11 @@ from docopt import docopt
 import sys
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
+import dateutil
 import csv
 import time
+from yahoo_finance import Share
 # from sqlalchemy.exc import importIntegrityError
 
 sys.path.append("../..")
@@ -27,6 +29,12 @@ from app.helpers import common
 
 download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
+
+
+def utc_to_mountain(utc_time):
+    if isinstance(utc_time, str):
+        utc_time = dateutil.parser.parse(utc_time)
+    return utc_time.astimezone(dateutil.tz.gettz('America/Denver'))
 
 
 def get_company_data_from_nasdaq():
@@ -157,10 +165,32 @@ def get_quotes_from_google():
             q.close = raw_close
             q.volume = raw_volume
             q.save()
-            if c % 50:
+            if c % 50 == 0:
                 app.logger.info('%s\tProcessed: %s/%s' % (company, c, total_rows))
         company.save()
         time.sleep(2)
+
+
+def get_daily_quotes():
+    companies = cc.all()
+    for c in companies:
+        app.logger.info('Working on %s' % c.name)
+        try:
+            share = Share(c.symbol)
+        except Exception, e:
+            app.logger.error('Error getting yahoo stock data for %s, %s' % (c.symbol, e))
+            continue
+        q = Quote()
+        q.company_id = c.id
+        q.open = share.data_set['Open']
+        q.close = share.get_price()
+        q.high = share.get_days_high()
+        q.low = share.get_days_low()
+        q.volume = share.data_set['Volume']
+        q.date = utc_to_mountain(share.data_set['LastTradeDateTimeUTC'])
+        # q.save()
+        print q.close
+        app.logger.info('Saved Quote for %s' % c.symbol)
 
 
 def get_realtime_quotes():
@@ -171,8 +201,10 @@ def get_realtime_quotes():
 
 
 def test():
-    print 'hi'
-    print Company.query.filter().all()
+    x = Quote.query.filter(
+        Quote.company_id == 1931 and
+        Quote.date >= datetime.now() - timedelta(days=365)).order_by(Quote.high).limit(1).one().high
+    print x
 
 if __name__ == "__main__":
     args = docopt(__doc__)
@@ -182,6 +214,7 @@ if __name__ == "__main__":
     #     test()
     # get_quotes_from_google()
     # get_realtime_quotes()
-    get_quotes_from_google()
+    # get_quotes_from_google()
+    get_daily_quotes()
 
 # End File: stocky/app/data/fetch.py
