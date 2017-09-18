@@ -27,18 +27,20 @@ def index(symbol=None):
         d['company'] = company
     except NoResultFound:
         return render_template('company/404.html')
-    quotes = Quote.query.filter(Quote.company_id == company.id).all()
+
+    quote_filter_args = Quote.company_id == company.id and Quote.date >= datetime.now() - timedelta(days=365)
+    quotes = Quote.query.filter(quote_filter_args).all()
     d['quotes'] = quotes
-    d['52_week_low'] = int(Quote.query.filter(
-        Quote.company_id == 26 and
-        Quote.date >= datetime.now() - timedelta(days=365)).order_by(desc(Quote.low)).limit(1).one().low)
-    d['52_week_high'] = int(Quote.query.filter(
-        Quote.company_id == 26 and
-        Quote.date >= datetime.now() - timedelta(days=365)).order_by(Quote.high).limit(1).one().high)
-    # return str(d['52_week_low'])
-    c_hit = CompanyMeta()
-    c_hit.key = 'web_hit'
-    c_hit.val_type = 'int'
+
+    # This should be moved to something that gets calculated when we get new queries.
+    d['low_52_week'] = Quote.query.filter(quote_filter_args).order_by(Quote.low).limit(1).one().low
+    d['high_52_week'] = Quote.query.filter(quote_filter_args).order_by(desc(Quote.high)).limit(1).one().high
+
+    # c_hit = CompanyMeta()
+    # c_hit.key = 'web_hit'
+    # c_hit.val_type = 'int'
+    # c_hit.val_int =
+
     return render_template('company/info.html', **d), 404
 
 

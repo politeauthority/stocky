@@ -17,4 +17,8 @@ def index():
     return render_template('portfolio/index.html')
 
 
+@portfolio.route('/event/add')
+def add_event():
+    return render_template('portfolio/add_event.html')
+
 # End File: stocky/app/controllers/portfolio.py

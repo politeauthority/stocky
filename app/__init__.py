@@ -30,10 +30,14 @@ from app.helpers import jinja_filters
 from controllers.home import home as ctrl_home
 from controllers.company import company as ctrl_company
 from controllers.portfolio import portfolio as ctrl_portfolio
-from controllers.test import test as ctrl_test
+from controllers.search import search as ctrl_search
 
 
 def register_logging(app):
+    """
+    Connects the logging to the app.
+
+    """
     log_dir = os.path.join(app.config['APP_DATA_PATH'], 'logs')
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -44,6 +48,10 @@ def register_logging(app):
 
 
 def register_jinja_funcs(app):
+    """
+    Makes functions avialble to jinja templates.
+
+    """
     app.jinja_env.filters['time_ago'] = misc_time.ago
     app.jinja_env.filters['fmt_date'] = misc_time.fmt_date
     app.jinja_env.filters['fmt_currency'] = jinja_filters.format_currency
@@ -51,13 +59,21 @@ def register_jinja_funcs(app):
 
 
 def register_blueprints(app):
+    """
+    Connect the blueprints to the router.
+
+    """
     app.register_blueprint(ctrl_home)
     app.register_blueprint(ctrl_company)
     app.register_blueprint(ctrl_portfolio)
-    app.register_blueprint(ctrl_test)
+    app.register_blueprint(ctrl_search)
 
 
 def register_api(app):
+    """
+    Enables the API routes and configruation.
+
+    """
     manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
     manager.create_api(Company, methods=['GET'])
     manager.create_api(Quote, methods=['GET'])

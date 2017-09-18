@@ -4,7 +4,10 @@ Usage:
     fetch.py [options]
 
 Options:
-    --test
+    --one_year          Get 365 day data on for all companies in the system.
+    --daily             Get daily quotes from yahoo.
+    --realtime          Runs the new realtime platform.
+    --test              Runs some debug tests
     --debug             Run the debugger.
 
 """
@@ -15,17 +18,14 @@ import requests
 from datetime import datetime, timedelta
 import dateutil
 import csv
-import time
 from yahoo_finance import Share
 # from sqlalchemy.exc import importIntegrityError
 
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
-from app.models.company import Company
 from app.models.quote import Quote
 from app.helpers import misc
-from app.helpers import common
 
 download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
@@ -37,81 +37,7 @@ def utc_to_mountain(utc_time):
     return utc_time.astimezone(dateutil.tz.gettz('America/Denver'))
 
 
-def get_company_data_from_nasdaq():
-    philes = __download_nasdaq_public_data()
-    __process_nasdaq_public_data_market(philes['nasdaq'], 'nasdaq')
-    __process_nasdaq_public_data_market(philes['nyse'], 'nyse')
-
-
-def __download_nasdaq_public_data():
-    """
-    Grabs base company data to kick off the database. This should only need to be run once really.
-
-    """
-    nasdaq_dir = os.path.join(download_path, 'tmp', 'nasdaq_data')
-    if not os.path.exists(nasdaq_dir):
-        os.makedirs(nasdaq_dir)
-    url_nasdaq = "http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&render=download"
-    url_nyse = "http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download"
-
-    downloaded_files = {}
-
-    app.logger.info('Downloading Nasdaq')
-    file_nasdaq = os.path.join(nasdaq_dir, 'nasdaq_%s.csv' % common.file_safe_date(datetime.now()))
-    r = requests.get(url_nasdaq)
-    with open(os.path.join(download_path, file_nasdaq), 'wb') as code:
-        code.write(r.content)
-    downloaded_files['nasdaq'] = file_nasdaq
-
-    app.logger.info('Downloading NYSE')
-    file_nyse = os.path.join(nasdaq_dir, 'nasdaq_%s.csv' % common.file_safe_date(datetime.now()))
-    r = requests.get(url_nyse)
-    with open(os.path.join(download_path, file_nyse), 'wb') as code:
-        code.write(r.content)
-    downloaded_files['nyse'] = file_nyse
-    return downloaded_files
-
-
-def __process_nasdaq_public_data_market(phile, market):
-    f = open(phile, 'rb')
-    reader = csv.reader(f)
-    count = 0
-    for row in reader:
-        count += 1
-        if count == 1:
-            continue
-        vals = {
-            'symbol': row[0],
-            'name': row[1],
-            'last_sale': row[2],
-            'market_cap': row[3],
-            'ipo_year': row[5],
-            'sector': row[6],
-            'industry': row[7],
-            'exchange': market,
-        }
-        c = Company.query.filter(
-            Company.symbol == vals['symbol'], Company.exchange == market).all()
-        if c:
-            app.logger.info('Already Have Data for %s' % c[0].name)
-            continue
-        c = Company()
-        c.symbol = vals['symbol']
-        c.name = vals['name']
-        if vals['last_sale'] != "n/a":
-            c.price = vals['last_sale']
-        else:
-            c.price = 0
-        c.market_cap = vals['market_cap']
-        c.ipo_year = vals['ipo_year']
-        c.sector = vals['sector']
-        c.industry = vals['industry']
-        c.exchange = vals['exchange']
-        c.save()
-        app.logger.info('Saved: %s' % c.name)
-
-
-def get_quotes_from_google():
+def all_company_one_year():
     """
     Google provides a 365 day csv of stock prices publicly. This is how we do it.
 
@@ -168,13 +94,20 @@ def get_quotes_from_google():
             if c % 50 == 0:
                 app.logger.info('%s\tProcessed: %s/%s' % (company, c, total_rows))
         company.save()
-        time.sleep(2)
 
 
 def get_daily_quotes():
+    """
+    Gets daily quotes for all companies with the Yahoo Stock API.
+
+    """
+    app.logger.info('Starting Daily Quotes from Yahoo')
     companies = cc.all()
+    total_companies = len(companies)
+    count = 0
     for c in companies:
-        app.logger.info('Working on %s' % c.name)
+        count += 1
+        app.logger.info('(%s/%s) Working on %s' % (count, total_companies, c.name))
         try:
             share = Share(c.symbol)
         except Exception, e:
@@ -187,9 +120,14 @@ def get_daily_quotes():
         q.high = share.get_days_high()
         q.low = share.get_days_low()
         q.volume = share.data_set['Volume']
-        q.date = utc_to_mountain(share.data_set['LastTradeDateTimeUTC'])
-        # q.save()
-        print q.close
+        if not share.data_set.get('LastTradeDateTimeUTC'):
+            app.logger.error('%s No Last trade date' % c.symbol)
+            continue
+        rounded_quote_date = utc_to_mountain(share.data_set['LastTradeDateTimeUTC']).replace(hour=0)
+        q.date = rounded_quote_date
+        q.save()
+        c.ts_updated = datetime.now()
+        c.save()
         app.logger.info('Saved Quote for %s' % c.symbol)
 
 
@@ -208,13 +146,12 @@ def test():
 
 if __name__ == "__main__":
     args = docopt(__doc__)
-    # get_company_data_from_nasdaq()
-    # if args['--test']:
-    #     print test
-    #     test()
-    # get_quotes_from_google()
-    # get_realtime_quotes()
-    # get_quotes_from_google()
-    get_daily_quotes()
+
+    if args['--one_year']:
+        all_company_one_year()
+    elif args['--daily']:
+        get_daily_quotes()
+    elif args['--realtime']:
+        get_realtime_quotes()
 
 # End File: stocky/app/data/fetch.py

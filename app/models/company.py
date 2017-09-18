@@ -54,5 +54,4 @@ class CompanyMeta(Base):
     def __repr__(self):
         return '<CompanyMeta %s, %s>' % (self.key, self.id)
 
-
 # End File: stocky/app/models/company.py

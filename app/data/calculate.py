@@ -1,7 +1,7 @@
-"""Fetch
+"""Calculate
 
 Usage:
-    fetch.py [options]
+    calculate.py [options]
 
 Options:
     --test
@@ -10,15 +10,11 @@ Options:
 """
 from docopt import docopt
 import sys
-import os
-import requests
 from datetime import datetime, timedelta
-from yahoo_finance import Share
 
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
-from app.models.company import Company
 from app.models.quote import Quote
 
 
@@ -26,14 +22,15 @@ def update_company_52_week_data():
     """
     """
     companeis = cc.all()
-    total = len(compnies)
+    total = len(companeis)
     count = 0
-    for c in companies:
+    for c in companeis:
         count += 1
         app.logger.info('(%s/%s) Processing %s ' % (count, total, c.name))
-        52_week_low = Quote.query.filter().order_by(Quote.low).limit(1).one().high
-        print 52_week_high
-        # print 52_week_low
+        low_52 = Quote.query.filter(
+            Quote.company_id == c.id,
+            Quote.date >= datetime.now() - timedelta(days=365)).order_by(Quote.low).limit(1).one().high
+        print low_52
 
 if __name__ == "__main__":
     args = docopt(__doc__)
