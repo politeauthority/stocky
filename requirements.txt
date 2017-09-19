@@ -19,4 +19,3 @@ wikipedia==1.4.0
 yahoo-finance==1.4.0
 gunicorn==19.7.1
 Flask-Restless==0.17.0
-yahoo_finance==1.4.0
