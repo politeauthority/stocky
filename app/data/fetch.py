@@ -105,30 +105,34 @@ def get_daily_quotes():
     companies = cc.all()
     total_companies = len(companies)
     count = 0
-    for c in companies:
+    for company in companies:
         count += 1
-        app.logger.info('(%s/%s) Working on %s' % (count, total_companies, c.name))
-        try:
-            share = Share(c.symbol)
-        except Exception, e:
-            app.logger.error('Error getting yahoo stock data for %s, %s' % (c.symbol, e))
-            continue
-        q = Quote()
-        q.company_id = c.id
-        q.open = share.data_set['Open']
-        q.close = share.get_price()
-        q.high = share.get_days_high()
-        q.low = share.get_days_low()
-        q.volume = share.data_set['Volume']
-        if not share.data_set.get('LastTradeDateTimeUTC'):
-            app.logger.error('%s No Last trade date' % c.symbol)
-            continue
-        rounded_quote_date = utc_to_mountain(share.data_set['LastTradeDateTimeUTC']).replace(hour=0)
-        q.date = rounded_quote_date
-        q.save()
-        c.ts_updated = datetime.now()
-        c.save()
-        app.logger.info('Saved Quote for %s' % c.symbol)
+        app.logger.info('(%s/%s) Working on %s' % (count, total_companies, company.name))
+        fetch_stock(company)
+
+
+def fetch_stock(company):
+    try:
+        share = Share(company.symbol)
+    except Exception, e:
+        app.logger.error('Error getting yahoo stock data for %s, %s' % (company.symbol, e))
+        continue
+    q = Quote()
+    q.company_id = company.id
+    q.open = share.data_set['Open']
+    q.close = share.get_price()
+    q.high = share.get_days_high()
+    q.low = share.get_days_low()
+    q.volume = share.data_set['Volume']
+    if not share.data_set.get('LastTradeDateTimeUTC'):
+        app.logger.error('%s No Last trade date' % company.symbol)
+        continue
+    rounded_quote_date = utc_to_mountain(share.data_set['LastTradeDateTimeUTC']).replace(hour=0)
+    q.date = rounded_quote_date
+    q.save()
+    company.ts_updated = datetime.now()
+    company.save()
+    app.logger.info('Saved Quote for %s' % company.symbol)
 
 
 def get_realtime_quotes():
