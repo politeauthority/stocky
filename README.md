@@ -1,5 +1,5 @@
 # Stocky
-Stock application to view and track portfolios. Currently up at https://politeauthority.me
+Stock application to view and track portfolios. Currently up at https://bad-at.life
 note: because of a current issue getting the run.sh script to run via Dockers 'CMD' tool you have to run another command after the container is started.
 This will be updated eventually
 
