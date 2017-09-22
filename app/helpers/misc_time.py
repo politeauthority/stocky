@@ -33,8 +33,10 @@ def auto_convert(string_):
 
 def ago(the_time):
     """
-    Get the time ago str
-    ie 3 months ago
+    Get the time ago string, ie 3 months ago.
+
+    :param the_time: The time in the passed to get the string delta of.
+    :type the_time: datetime obj
     """
     if not the_time or not isinstance(the_time, datetime):
         return None
@@ -75,3 +77,15 @@ def ago(the_time):
 
 def fmt_date(the_date,):
     return the_date.strftime(the_date, '%M-%d %Y')
+
+
+def utc_to_mountain(utc_time):
+    """
+    Conerts a UTC Datetime object to Mountain time
+
+    :param utc_time: UTC Datetime object.
+    :type utc_time: Datetime obj
+    """
+    if isinstance(utc_time, str):
+        utc_time = dateutil.parser.parse(utc_time)
+    return utc_time.astimezone(dateutil.tz.gettz('America/Denver'))

@@ -7,7 +7,8 @@ Options:
     --one_year          Get 365 day data on for all companies in the system.
     --daily             Get daily quotes from yahoo.
     --realtime          Runs the new realtime platform.
-    --test              Runs some debug tests
+    --stock             The symbol to run data jobs against.
+    --test              Runs some debug tests.
     --debug             Run the debugger.
 
 """
@@ -16,25 +17,19 @@ import sys
 import os
 import requests
 from datetime import datetime, timedelta
-import dateutil
 import csv
+from sqlalchemy import desc
 from yahoo_finance import Share
-# from sqlalchemy.exc import importIntegrityError
 
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
 from app.models.quote import Quote
 from app.helpers import misc
+from app.helpers import misc_time
 
 download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
-
-
-def utc_to_mountain(utc_time):
-    if isinstance(utc_time, str):
-        utc_time = dateutil.parser.parse(utc_time)
-    return utc_time.astimezone(dateutil.tz.gettz('America/Denver'))
 
 
 def all_company_one_year():
@@ -61,7 +56,6 @@ def all_company_one_year():
         app.logger.info('Downloading %s' % csv_file)
         with open(csv_file, 'wb') as f:
             f.write(r.content)
-
         reader = list(csv.DictReader(open(csv_file)))
         c = 0
         app.logger.info('Saving Quotes')
@@ -93,7 +87,7 @@ def all_company_one_year():
             q.save()
             if c % 50 == 0:
                 app.logger.info('%s\tProcessed: %s/%s' % (company, c, total_rows))
-        company.save()
+        calculate_company_stats(company)
 
 
 def get_daily_quotes():
@@ -112,11 +106,27 @@ def get_daily_quotes():
 
 
 def fetch_stock(company):
+        quote = handle_yahoo_quote(company)
+        if quote:
+            app.logger.info('Saved Quote for %s' % company.symbol)
+            calculate_company_stats(company)
+            app.logger.info('Updated Company info for %s' % company.symbol)
+
+
+def handle_yahoo_quote(company):
+    """
+    Gets and saves the current quote for a given company from Yahoo.
+
+    :param company: Company obj
+    :type company: obj
+    :return The Quote record saved.
+    :rtype: Quote
+    """
     try:
         share = Share(company.symbol)
     except Exception, e:
         app.logger.error('Error getting yahoo stock data for %s, %s' % (company.symbol, e))
-        continue
+        return False
     q = Quote()
     q.company_id = company.id
     q.open = share.data_set['Open']
@@ -126,13 +136,33 @@ def fetch_stock(company):
     q.volume = share.data_set['Volume']
     if not share.data_set.get('LastTradeDateTimeUTC'):
         app.logger.error('%s No Last trade date' % company.symbol)
-        continue
-    rounded_quote_date = utc_to_mountain(share.data_set['LastTradeDateTimeUTC']).replace(hour=0)
+        return False
+    rounded_quote_date = misc_time.utc_to_mountain(share.data_set['LastTradeDateTimeUTC']).replace(hour=0)
     q.date = rounded_quote_date
     q.save()
+    return q
+
+
+def calculate_company_stats(company):
+    """
+    Calculate out the last price, and low/high 52 week fields.
+    This is generic and can be used by any fetch process at anytime without issue.
+
+
+    :param company: The company that basic company stats should be calculated for
+    :type company: Company obj
+    """
+    last_quote = Quote.query.filter(Quote.company_id == company.id).order_by(desc(Quote.date)).limit(1).one()
+    company.price = last_quote.close
+    quote_filter_args = Quote.company_id == company.id and Quote.date >= datetime.now() - timedelta(days=365)
+    low_52_week = Quote.query.filter(quote_filter_args).order_by(Quote.low).limit(1).one()
+    high_52_week = Quote.query.filter(quote_filter_args).order_by(desc(Quote.high)).limit(1).one()
+    company.low_52_weeks = low_52_week.low
+    company.low_52_weeks_date = low_52_week.date
+    company.high_52_weeks = high_52_week.high
+    company.high_52_weeks_date = high_52_week.date
     company.ts_updated = datetime.now()
     company.save()
-    app.logger.info('Saved Quote for %s' % company.symbol)
 
 
 def get_realtime_quotes():
