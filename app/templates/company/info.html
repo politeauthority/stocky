@@ -11,17 +11,22 @@
     <!-- <script src="/static/data/flot-data.js"></script> -->
 
     <script type=text/javascript>
-        var filters = [{"name": "id", "op": "eq", "val": "{{company.id}}"}];
+        var filters = [{"name": "company_id", "op": "==", "val": {{company.id}}}];
         d = $.ajax({
-          url: 'http://localhost/api/quotes',
-          data: {"q": JSON.stringify({"filters": filters})},
-          dataType: "json",
-          contentType: "application/json",
-          success: function(data) { console.log(data.objects); }
+            url: '/api/quotes',
+            data: {"q": JSON.stringify({"filters": filters})},
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data) { return data.objects; },
+            error: function() {
+               alert('An error occurred');
+            }
         });
-        console.log(d);
-        console.log(d[0]);
-
+        for(x in data.objects){
+            console.log(x);
+        }
+        // console.log(d.objects);
+        // console.log(d.num_results);
     </script>
 {%endblock%}
 
@@ -63,13 +68,13 @@
                                 {%if high_52_week%}
                                     <a href="#" class="list-group-item">
                                         <i class="fa  fa-arrow-circle-up fa-fw"></i> 52 Week High
-                                        <span class="pull-right text-muted"><strong>${{high_52_week}}</strong></span>
+                                        <span class="pull-right text-muted"><strong>${{high_52_week|fmt_currency}}</strong></span>
                                     </a>
                                 {%endif%}
                                 {%if low_52_week%}
                                     <a href="#" class="list-group-item">
                                         <i class="fa  fa-arrow-circle-down fa-fw"></i> 52 Week Low
-                                        <span class="pull-right text-muted"><strong>${{low_52_week}}</strong></span>
+                                        <span class="pull-right text-muted"><strong>${{low_52_week|fmt_currency}}</strong></span>
                                     </a>
                                 {%endif%}
                             </div>
@@ -169,12 +174,12 @@
                         </a>
                         <a href="#" class="list-group-item">
                             <i class="fa fa-comment fa-fw"></i> Quotes
-                            <span class="pull-right text-muted"><strong>{{quotes|length}}</strong></span>
+                            <span class="pull-right text-muted"><strong>{{quote_count}}</strong></span>
 
                         </a>
                         <a href="#" class="list-group-item">
                             <i class="fa fa-comment fa-fw"></i> Last updated
-                            <span class="pull-right text-muted"><strong>{{company.ts_updated}}</strong></span>
+                            <span class="pull-right text-muted"><strong>{{company.ts_updated|time_ago}}</strong></span>
 
                         </a>
 
