@@ -1,12 +1,12 @@
-# PoliteAuthority Stocks (pas)
-Stock application to view and track portfolios. Currently up at https://politeauthority.me
+# Stocky
+Stock application to view and track portfolios. Currently up at https://bad-at.life
 note: because of a current issue getting the run.sh script to run via Dockers 'CMD' tool you have to run another command after the container is started.
 This will be updated eventually
 
 
 ## Environmental Vars
 ENV Var | Default | Description
---- | --- | --- 
+--- | --- | ---
 STOCKY_MYSQL_HOST | MySQL Database Host | None
 STOCKY_MYSQL_USER | MySQL Database User | None
 STOCKY_MYSQL_PASS | MySQL Database Password | None
@@ -48,7 +48,7 @@ docker run \
     -e STOCKY_MYSQL_USER="user" \
     -e STOCKY_MYSQL_PASS="password" \
     -e STOCKY_BUILD="LIVE" \
-    -e VIRTUAL_HOST=politeauthority.me \
+    -e VIRTUAL_HOST=bad-at.life \
     --restart=always \
     stocky
 ```
