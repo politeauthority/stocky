@@ -106,11 +106,14 @@ def get_daily_quotes():
 
 
 def fetch_stock(company):
-        quote = handle_yahoo_quote(company)
-        if quote:
-            app.logger.info('Saved Quote for %s' % company.symbol)
-            calculate_company_stats(company)
-            app.logger.info('Updated Company info for %s' % company.symbol)
+    """
+
+    """
+    quote = handle_yahoo_quote(company)
+    if quote:
+        app.logger.info('Saved Quote for %s' % company.symbol)
+        calculate_company_stats(company)
+        app.logger.info('Updated Company info for %s' % company.symbol)
 
 
 def handle_yahoo_quote(company):
