@@ -6,10 +6,11 @@ import os
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 import flask_restless
+
 
 app = Flask(__name__)
 if os.environ.get('STOCKY_BUILD') == 'LIVE':
@@ -18,6 +19,7 @@ else:
     app.config.from_pyfile('config/dev.py')
 db = SQLAlchemy(app)
 
+# Models
 from app.models.company import Company
 from app.models.quote import Quote
 
@@ -83,5 +85,11 @@ register_logging(app)
 register_jinja_funcs(app)
 register_blueprints(app)
 register_api(app)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('errors/404.html'), 404
+
 
 app.logger.info('Started App!')

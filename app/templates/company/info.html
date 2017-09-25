@@ -11,78 +11,221 @@
     <!-- <script src="/static/data/flot-data.js"></script> -->
 
     <script type=text/javascript>
-        var filters = [{"name": "company_id", "op": "==", "val": {{company.id}}}];
-        d = $.ajax({
-            url: '/api/quotes',
-            data: {"q": JSON.stringify({"filters": filters})},
-            dataType: "json",
-            contentType: "application/json",
-            success: function(data) { return data.objects; },
-            error: function() {
-               alert('An error occurred');
+        $(document).ready(function() {
+            var filters = [{"name": "company_id", "op": "==", "val": {{company.id}}}];
+            var order_by = [{"field":"date","direction":"desc"}];
+            var limit = [{"field":"date","direction":"desc"}]
+            data_request = $.ajax({
+                url: '/api/quotes',
+                data: {"q": JSON.stringify({"filters": filters, 'order_by': order_by})},
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data){
+                    handle_quotes(data)
+                },
+                error: function() {
+                   alert('An error occurred');
+                }
+            });
+
+            window.chart_data = [];
+
+            function handle_quotes(data){
+                q_current = data.objects[0];
+                q_previous = data.objects[1];
+                dollar_change = q_current.close - q_previous.close;
+                percent_change = (dollar_change * 100) / q_previous.close;
+                if(dollar_change >= 0){
+                    price_box_color = 'green';
+                } else {
+                    price_box_color = 'red';
+                }
+
+                $('#company_basic_stat').removeClass('panel-primary').addClass('panel-' + price_box_color);
+                $('#company_price').text(data.objects[0].close);
+                $('#day_price_change').text((dollar_change).toFixed(2));
+                $('#day_percent_change').text((percent_change).toFixed(2));
+                $('#day_price_date').text(q_current.date);
+
+                $('#stat_open_data').text('$' + q_current.open);
+                $('#stat_high_data').text('$ ' + q_current.high);
+                $('#stat_low_data').text('$ ' + q_current.low);
+
+                var week_52_high = 0,
+                    week_52_low = 10000000;
+
+                for (i = 0; i < data.objects.length; i++){
+                    if(data.objects[i].low < week_52_low){
+                        week_52_low = data.objects[i].low;
+                    }
+                    if(data.objects[i].high > week_52_high){
+                        week_52_high = data.objects[i].high;
+                    }
+                    window.chart_data.push([new Date(data.objects[i].date), data.objects[i].close]);
+                    console.log(window.chart_data);
+                }
+                $('#stat_52_week_low_data').text(week_52_low);
+                $('#stat_52_week_high_data').text(week_52_high);
             }
+
+            console.log(window.chart_data);
+            //Flot Multiple Axes Line Chart
+            var oilprices = window.chart_data;
+            console.log('do stuff.');
+            console.log(oilprices);
+
+            function euroFormatter(v, axis) {
+                return v.toFixed(axis.tickDecimals) + "€";
+            }
+
+            function doPlot(position) {
+                $.plot($("#flot-line-chart-multi"), [{
+                    data: oilprices,
+                    label: "Company Price ($)",
+                    // points: 'triangle'
+                }], {
+                    xaxes: [{
+                        mode: 'time',
+                        tickSize: [1, "month"],
+                        tickLength: 0,
+                        axisLabel: "2012",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10
+                    }],
+                    yaxes: [{
+                        min: 0
+                    }, {
+                        // align if we are to the right
+                        alignTicksWithAxis: position == "right" ? 1 : null,
+                        position: position,
+                        tickFormatter: euroFormatter
+                    }],
+                    legend: {
+                        position: 'nw'
+                    },
+                    grid: {
+                        hoverable: true //IMPORTANT! this is needed for tooltip to work
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "%s for %x was %y",
+                        xDateFormat: "%m %d",
+
+                        onHover: function(flotItem, $tooltipEl) {
+                            // console.log(flotItem, $tooltipEl);
+                        }
+                    },
+                    colors: ["#5cb85c", "#0022FF"]
+                });
+            }
+
+            doPlot("right");
+
+            $("button").click(function() {
+                doPlot($(this).text());
+            });
         });
-        for(x in data.objects){
-            console.log(x);
-        }
-        // console.log(d.objects);
-        // console.log(d.num_results);
     </script>
 {%endblock%}
 
 {% block content %}
 
 <div id="page-wrapper">
+
     <div class="row">
         <div class="col-lg-8">
             <h1 class="page-header">{{company.name}}</h1>
+            {%if company.sector%}
+                <a href="#">
+                    <i class="fa fa-building-o fa-fw"></i>
+                    <span class="text-muted"><strong>{{company.sector}}</strong></span>
+                </a>
+                <br/>
+            {%endif%}
+            {%if company.industry%}
+                <a href="#">
+                    <i class="fa fa-building-o fa-fw"></i>
+                    <h3>
+                    <span class="text-muted">
+                        <strong>{{company.industry}}</strong>
+                    </span>
+                    </h3>
+                </a>
+                <br/>
+            {%endif%}
         </div>
         <!-- /.col-lg-8-->
     </div>
+
     <!-- /.row -->
     <div class="row">
-        <div class="col-lg-4 col-md-6">
-            <div class="panel panel-primary">
+        <div class="col-lg-3 col-md-4">
+            <div id="company_basic_stat" class="panel panel-primary">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3">
                             <i class="fa fa-dollar fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{company.price|fmt_currency}}</div>
+                            <div id="company_price" class="huge">{{company.price|fmt_currency}}</div>
                             <div>Current Price</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-building fa-fw"></i>Stats
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="list-group">
-                                {%if high_52_week%}
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa  fa-arrow-circle-up fa-fw"></i> 52 Week High
-                                        <span class="pull-right text-muted"><strong>${{high_52_week|fmt_currency}}</strong></span>
-                                    </a>
-                                {%endif%}
-                                {%if low_52_week%}
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa  fa-arrow-circle-down fa-fw"></i> 52 Week Low
-                                        <span class="pull-right text-muted"><strong>${{low_52_week|fmt_currency}}</strong></span>
-                                    </a>
-                                {%endif%}
+                            <div>
+                                <i class="fa fa-dollar"></i>
+                                <span id="day_price_change"></span>
+                                <b> | </b>
+                                <span id="day_percent_change"></span>
+                                <i class="fa fa-percent"></i>
+                                <br>
+                                <div>
+                                    <i class="fa fa-clock"></i>
+                                    as of <span id="day_price_date"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-lg-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-building fa-fw"></i>Stats
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="list-group">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td><b>Open</b></td>
+                                        <td id="stat_open_data"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>High</b></td>
+                                        <td id="stat_high_data"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Low</b></td>
+                                        <td id="stat_low_data"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>52 Week High</b></td>
+                                        <td id="stat_52_week_high_data"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>52 Week Low</b></td>
+                                        <td id="stat_52_week_low_data"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -92,28 +235,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="list-group">
-                                {%if company.sector%}
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-building-o fa-fw"></i> Sector
-                                        <span class="pull-right text-muted"><strong>{{company.sector}}</strong></span>
-                                    </a>
-                                {%endif%}
-                                {%if company.industry%}
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-building-o fa-fw"></i> Industry
-                                        <span class="pull-right text-muted">
-                                            <strong>{{company.industry}}</strong>
-                                        </span>
-                                    </a>
-                                {%endif%}
-                                {%if company.exchange %}
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-building-o fa-fw"></i> Exchange
-                                        <span class="pull-right text-muted">
-                                            <strong>{{company.exchange}}</strong>
-                                        </span>
-                                    </a>
-                                {%endif%}
+
                             </div>
                         </div>
                     </div>
@@ -153,7 +275,6 @@
                     <div class="flot-chart">
                         <div style="width:100%;height:100%" class="flot-chart-content" id="flot-line-chart-multi"></div>
                     </div>
-                    http://localhost/api/quotes?name=company_id&val={{company.id}}
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -244,6 +365,5 @@
     <!-- /.row -->
 
 </div>
-
 
 {% endblock %}
