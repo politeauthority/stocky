@@ -76,7 +76,7 @@ def register_api(app):
     """
     manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
     manager.create_api(Company, methods=['GET'])
-    manager.create_api(Quote, methods=['GET'])
+    manager.create_api(Quote, methods=['GET'], max_results_per_page=365)
 
 DebugToolbarExtension(app)
 register_logging(app)
