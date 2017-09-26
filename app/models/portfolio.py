@@ -5,7 +5,6 @@ from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
-from app.models.company import Company
 
 
 class Portfolio(Base):
@@ -20,7 +19,7 @@ class Portfolio(Base):
         self.id = id
 
     def __repr__(self):
-        return '<Portfolio %r, %r>' % (self.symbol, self.name)
+        return '<Portfolio %r, %r>' % (self.id, self.name)
 
 
 class PortfolioEvent(Base):
@@ -35,7 +34,7 @@ class PortfolioEvent(Base):
     type = Column(String(10), nullable=False)
     portfolio = relationship('Portfolio', back_populates="events")
 
-    def __init__(self, id):
+    def __init__(self, id=None):
         self.id = id
 
     def __repr__(self):

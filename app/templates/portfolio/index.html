@@ -1,19 +1,106 @@
 {% extends "layout.html" %}
 {%block title%}Portfolio{%endblock%}
+
+{%block javascript%}
+    <script type=text/javascript>
+        $(document).ready(function() {
+            var filters = [{"name": "company_id", "op": "in", "val": "{{company_qry}}"}];
+            var order_by = [{"field":"date","direction":"desc"}];
+            var limit = [{"field":"date","direction":"desc"}]
+            data_request = $.ajax({
+                url: '/api/quotes',
+                data: {"q": JSON.stringify({"filters": filters, 'order_by': order_by})},
+                dataType: "json",
+                contentType: "application/json",
+                success: function(data){
+                    handle_quotes(data)
+                },
+                error: function() {
+                   alert('An error occurred');
+                }
+            });
+
+            window.chart_data = [];
+
+            function handle_quotes(data){
+                console.log(data);
+            }
+
+        });
+    </script>
+{%endblock%}
+
 {% block content %}
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">Portfolio</h1>
+            <a href="/portfolio/event/form">Add Event</a>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <h2>Current Positions</h2>
+            <table class='table table-striped, table-responsive'>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Investment</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for company_id, position in positions.iteritems()%}
+                        <tr>
+                            <td>{{companies[company_id].name}}</td>
+                            <td>$ {{position.investment}}</td>
+                            <td></td>
+                        </tr>
+                    {%endfor%}
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Investment</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <div class="panel panel-default">
-                <a href="/portfolio/event/form">Add Event</a>
+                <h2>Recent Portfolio Updates</h2>
+                <table class='table table-striped, table-responsive'>
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Shares</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for e in portfolio.events%}
+                            <tr class="{%if e.type == 'buy' %}danger{%else%}success{%endif%}">
+                                <td>
+                                    <a href="/company/{{companies[e.company_id].symbol}}">{{companies[e.company_id].name}}</a>
+                                </td>
+                                <td>{{e.count}}</td>
+                                <td>$ {{e.price}}</td>
+                                <td>$ {{e.price * e.count}}</td>
+                                <td> {{e.date|time_ago}}</td>
+                            </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
             </div>
         </div>
+
     </div>
 </div>
 {%endblock%}

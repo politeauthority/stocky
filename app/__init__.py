@@ -20,8 +20,10 @@ else:
 db = SQLAlchemy(app)
 
 # Models
-from app.models.company import Company
+from app.models.company import Company, CompanyMeta
 from app.models.quote import Quote
+from app.models.portfolio import Portfolio, PortfolioEvent
+from app.models.user import User, UserMeta
 
 # Helpers
 from app.helpers import misc_time
@@ -33,6 +35,7 @@ from controllers.home import home as ctrl_home
 from controllers.company import company as ctrl_company
 from controllers.portfolio import portfolio as ctrl_portfolio
 from controllers.search import search as ctrl_search
+from controllers.auth import auth as ctrl_auth
 
 
 def register_logging(app):
@@ -69,6 +72,7 @@ def register_blueprints(app):
     app.register_blueprint(ctrl_company)
     app.register_blueprint(ctrl_portfolio)
     app.register_blueprint(ctrl_search)
+    app.register_blueprint(ctrl_auth)
 
 
 def register_api(app):

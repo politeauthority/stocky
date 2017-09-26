@@ -33,9 +33,27 @@ class Company(Base):
     def __init__(self, _id=None):
         if _id:
             self.id = _id
+            c = self.query.filter(Company.id == self.id).one()
+            if c:
+                self.__build_obj__(c)
 
     def __repr__(self):
-        return '<Company %r, %r>' % (self.symbol, self.name)
+        return '<Company %r, %r>' % (self.id, self.symbol)
+
+    def __build_obj__(self, obj):
+        self.id = int(obj.id)
+        self.symbol = obj.symbol
+        self.name = obj.name
+        self.market_cap = obj.market_cap
+        self.ipo_year = obj.ipo_year
+        self.sector = obj.sector
+        self.industry = obj.industry
+        self.exchange = obj.exchange
+        self.high_52_weeks = obj.high_52_weeks
+        self.high_52_weeks_date = obj.high_52_weeks_date
+        self.low_52_weeks = obj.low_52_weeks
+        self.low_52_weeks_date = obj.low_52_weeks_date
+        self.meta = obj.meta
 
 
 class CompanyMeta(Base):

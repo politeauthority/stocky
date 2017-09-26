@@ -1,10 +1,12 @@
-"""Company - Models
+"""User - Models
 
 """
-from sqlalchemy import Column, Integer, String, Float, DateTime, PickleType, Text
+from sqlalchemy import Column, Integer, String, DateTime, PickleType, Text
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash, check_password_hash
 
+from app import db
 from app.models.base import Base
 
 
@@ -12,9 +14,9 @@ class User(Base):
 
     __tablename__ = 'users'
 
-    email = Column(String(10), nullable=False)
-    name = Column(String(128), nullable=False)
-    password = Column(Float, nullable=False)
+    email = Column(String(256), nullable=False)
+    name = Column(String(256))
+    password = Column(String(256), nullable=False)
     type = Column(String(20))
     meta = relationship('UserMeta', back_populates="user")
 
@@ -23,7 +25,18 @@ class User(Base):
             self.id = _id
 
     def __repr__(self):
-        return '<User %r, %r>' % (self.symbol, self.name)
+        return '<User %r, %r>' % (self.id, self.email)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def save(self):
+        if not self.id:
+            db.session.add(self)
+        db.session.commit()
 
 
 class UserMeta(Base):
@@ -37,6 +50,7 @@ class UserMeta(Base):
     val_pickle = Column(PickleType())
     val_date = Column(DateTime)
     company = relationship("User", back_populates="meta")
+    user = relationship('User', back_populates="meta")
 
     def __repr__(self):
         return '<UserMeta %s, %s>' % (self.key, self.id)

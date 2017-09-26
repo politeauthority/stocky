@@ -13,6 +13,7 @@ home = Blueprint('Home', __name__, url_prefix='/')
 
 
 @home.route('')
+@home.route('dashboard')
 def index():
     """
     Index
@@ -23,8 +24,9 @@ def index():
     d['data_stats'] = {
         'total_companies': Company.query.count(),
         'total_quotes': Quote.query.count(),
-        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10)
     }
+    d['recent_companies'] = Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
+
     return render_template('home/dashboard.html', **d)
 
 
@@ -34,7 +36,6 @@ def search():
     return render_template('home/search_results.html', **d)
 
 
-@home.route('dashboard')
 def dashboard():
     """
     Dashboard
@@ -45,7 +46,7 @@ def dashboard():
     d['data_stats'] = {
         'total_companies': Company.query.count(),
         'total_quotes': Quote.query.count(),
-        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10)
+        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
     }
     return render_template('home/dashboard.html', **d)
 
