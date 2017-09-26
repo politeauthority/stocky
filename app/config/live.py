@@ -12,8 +12,8 @@ TESTING = False
 THREADS_PER_PAGE = 2
 # Use a secure, unique and absolutely secret key for
 # signing the data.
-CSRF_SESSION_KEY = "secret"
+CSRF_SESSION_KEY = "0296686426"
 
 # Secret key for signing cookies
-SECRET_KEY = "secret"
+SECRET_KEY = "3963963928"
 APP_DATA_PATH = '/data/'
