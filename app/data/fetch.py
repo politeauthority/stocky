@@ -176,10 +176,13 @@ def get_realtime_quotes():
 
 
 def test():
-    x = Quote.query.filter(
-        Quote.company_id == 1931 and
-        Quote.date >= datetime.now() - timedelta(days=365)).order_by(Quote.high).limit(1).one().high
-    print x
+    companies = cc.watchlist()
+    # companies_to_run = len(companies)
+    for company in companies:
+        print company.symbol
+        quotes = Quote.query.filter(Quote.company_id == company.id).order_by(Quote.date).one()
+        print quotes.date
+        print ''
 
 if __name__ == "__main__":
     args = docopt(__doc__)
@@ -190,5 +193,7 @@ if __name__ == "__main__":
         get_daily_quotes()
     elif args['--realtime']:
         get_realtime_quotes()
+    elif args['--test']:
+        test()
 
 # End File: stocky/app/data/fetch.py
