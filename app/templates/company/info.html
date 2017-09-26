@@ -47,7 +47,7 @@
                 $('#day_percent_change').text((percent_change).toFixed(2));
                 $('#day_price_date').text(q_current.date);
 
-                $('#stat_open_data').text('$' + q_current.open);
+                $('#stat_open_data').text('$ ' + q_current.open);
                 $('#stat_high_data').text('$ ' + q_current.high);
                 $('#stat_low_data').text('$ ' + q_current.low);
 
@@ -64,8 +64,8 @@
                     window.chart_data.push([new Date(data.objects[i].date), data.objects[i].close]);
                     console.log(window.chart_data);
                 }
-                $('#stat_52_week_low_data').text(week_52_low);
-                $('#stat_52_week_high_data').text(week_52_high);
+                $('#stat_52_week_low_data').text('$ ' + week_52_low);
+                $('#stat_52_week_high_data').text('$ ' + week_52_high);
             }
 
             console.log(window.chart_data);
@@ -136,22 +136,16 @@
 
     <div class="row">
         <div class="col-lg-8">
-            <h1 class="page-header">{{company.name}}</h1>
+            <h1 class="page-header">{{company.symbol}}</h1>
+            <h2>{{company.name}}</h2>
             {%if company.sector%}
                 <a href="#">
-                    <i class="fa fa-building-o fa-fw"></i>
-                    <span class="text-muted"><strong>{{company.sector}}</strong></span>
+                    <h3 class="text-muted">{{company.sector}}</h3>
                 </a>
-                <br/>
             {%endif%}
             {%if company.industry%}
                 <a href="#">
-                    <i class="fa fa-building-o fa-fw"></i>
-                    <h3>
-                    <span class="text-muted">
-                        <strong>{{company.industry}}</strong>
-                    </span>
-                    </h3>
+                    <h4 class="text-muted">{{company.industry}}</h3>
                 </a>
                 <br/>
             {%endif%}
@@ -226,7 +220,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+<!--         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-building fa-fw"></i>Base Info
@@ -241,7 +235,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <!-- /.row -->
 

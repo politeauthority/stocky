@@ -32,7 +32,6 @@ class PortfolioEvent(Base):
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
     type = Column(String(10), nullable=False)
-    date = Column(DateTime, nullable=False)
 
     def __init__(self, id):
         self.id = id

@@ -9,9 +9,37 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <div class="panel panel-default">
-                
+                <form role="form" action="/portfolio/event/add" method="POST" lpformnum="1" _lpchecked="1">
+                    <div class="form-group">
+                        <label>Company ID</label>
+                        <input name="company_id" class="form-control">
+                        <p class="help-block">The company ID for portfolio event.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Portfolio ID</label>
+                        <input name="portfolio_id" value="1" class="form-control">
+                        <p class="help-block">The company ID for portfolio event.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input name="price" class="form-control">
+                        <p class="help-block">The price for portfolio event.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input name="date" class="form-control">
+                        <p class="help-block">The date for portfolio event.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <input name="type" class="form-control">
+                        <p class="help-block">The date for portfolio event.</p>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit Button</button>
+                    <button type="reset" class="btn btn-default">Reset Button</button>
+                </form>
             </div>
         </div>
     </div>
