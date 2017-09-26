@@ -6,8 +6,9 @@ sys.path.append("../..")
 
 from app.models.company import Company
 
-watchlist_symbols = ['AAPLE', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR', 'EFX', 'SPYD', 'TSLA', 'NFLX', 'FB',
-                     'DIS', 'GPRO', 'SBUX', 'F', 'BABA', 'FIT', 'ABBS', 'INTC', 'TWTR', 'ERIC', 'VMW', 'T', 'EXF']
+watchlist_symbols = ['AAPL', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR', 'EFX', 'SPYD', 'TSLA', 'NFLX', 'FB',
+                     'DIS', 'GPRO', 'SBUX', 'F', 'BABA', 'FIT', 'ABBS', 'INTC', 'TWTR', 'ERIC', 'VMW', 'T', 'EXF',
+                     'ORCL', 'RDFN']
 
 
 def by_symbols(symbols):

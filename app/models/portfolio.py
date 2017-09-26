@@ -5,15 +5,16 @@ from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
+from app.models.company import Company
 
 
 class Portfolio(Base):
 
     __tablename__ = 'portfolios'
 
-    events = relationship('PortfolioEvent', back_populates="events")
     user_id = Column(Integer, nullable=False)
     name = Column(String(20), nullable=False)
+    events = relationship('PortfolioEvent', back_populates="portfolio")
 
     def __init__(self, id):
         self.id = id
@@ -32,6 +33,7 @@ class PortfolioEvent(Base):
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
     type = Column(String(10), nullable=False)
+    portfolio = relationship('Portfolio', back_populates="events")
 
     def __init__(self, id):
         self.id = id
