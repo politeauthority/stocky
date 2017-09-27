@@ -30,12 +30,6 @@ def index():
     return render_template('home/dashboard.html', **d)
 
 
-@home.route('search')
-def search():
-    d = {}
-    return render_template('home/search_results.html', **d)
-
-
 def dashboard():
     """
     Dashboard

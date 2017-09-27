@@ -93,9 +93,11 @@
                                 </ul>
                                 <!-- /.nav-second-level -->
                             </li>
+                            {%if session.get('authenticated')%}
                             <li>
                                 <a href="/portfolio"><i class="fa fa-folder-open fa-fw"></i> Portoflio</a>
                             </li>
+                            {%endif%}
                         </ul>
                     </div>
                     <!-- /.sidebar-collapse -->

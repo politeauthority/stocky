@@ -139,7 +139,7 @@
             <h1 class="page-header">{{company.symbol}}</h1>
             <h2>{{company.name}}</h2>
             {%if company.sector%}
-                <a href="#">
+                <a href="/search?industry={{company.sector}}">
                     <h3 class="text-muted">{{company.sector}}</h3>
                 </a>
             {%endif%}

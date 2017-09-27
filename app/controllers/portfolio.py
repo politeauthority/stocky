@@ -5,6 +5,7 @@
 from flask import Blueprint, render_template, request, redirect
 
 from app import app
+from app.helpers.decorators import requires_auth
 from app.models.company import Company
 from app.models.portfolio import Portfolio, PortfolioEvent
 
@@ -12,6 +13,7 @@ portfolio = Blueprint('Portfolio', __name__, url_prefix='/portfolio')
 
 
 @portfolio.route('')
+@requires_auth
 def index():
     """
     Portfolio Index page

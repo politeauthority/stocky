@@ -40,6 +40,7 @@ def login():
 def logout():
     """
     Destroy all the sessions and log the user out.
+
     """
     session.clear()
     return redirect('/')
@@ -48,11 +49,13 @@ def logout():
 @auth.route('/sign-up')
 def signup():
     """
+    Sign up page route
+
     """
     return render_template('auth/sign-up.html')
 
 
-@auth.route('/sign-up-submit',  methods=['GET', 'POST'])
+@auth.route('/sign-up-submit', methods=['GET', 'POST'])
 def signup_submit():
     """
     Route for user sign-up forms to go to.
@@ -68,5 +71,11 @@ def signup_submit():
     user.set_password(request.form['password'])
     user.save()
     return redirect('/dashboard')
+
+
+@auth.route('/error')
+def error():
+    return render_template('errors/403.html')
+
 
 # End File: stocky/app/controllers/auth.py
