@@ -70,4 +70,13 @@ def watchlist():
     d['companies'] = cc.watchlist()
     return render_template('home/watchlist.html', **d)
 
+
+@home.route('about')
+def about():
+    """
+    Static about page
+
+    """
+    return render_template('home/about.html')
+
 # End File: stocky/app/controllers/home.py

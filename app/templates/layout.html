@@ -94,10 +94,13 @@
                                 <!-- /.nav-second-level -->
                             </li>
                             {%if session.get('authenticated')%}
-                            <li>
-                                <a href="/portfolio"><i class="fa fa-folder-open fa-fw"></i> Portoflio</a>
-                            </li>
+                                <li>
+                                    <a href="/portfolio"><i class="fa fa-folder-open fa-fw"></i> Portoflio</a>
+                                </li>
                             {%endif%}
+                            <li>
+                                <a href="/about"><i class="fa fa-info fa-fw"></i> About</a>
+                            </li>
                         </ul>
                     </div>
                     <!-- /.sidebar-collapse -->
