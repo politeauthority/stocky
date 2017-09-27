@@ -23,7 +23,8 @@ def markets_open(time_to_check=None, just_the_date=False):
     else:
         the_time = datetime.now()
 
-    if the_time.weekday() in [5, 6]:
+    if the_time.weekday() in [4, 5]:
+        print 'weekday'
         return False
 
     us_holidays = holidays.UnitedStates()

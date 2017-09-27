@@ -28,6 +28,8 @@ from app.models.quote import Quote
 from app.helpers import misc
 from app.helpers import misc_time
 
+from sqlalchemy.orm.exc import NoResultFound
+
 download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
 
@@ -178,10 +180,27 @@ def get_realtime_quotes():
 def test():
     companies = cc.watchlist()
     # companies_to_run = len(companies)
+    market_days_last_year()
+    exit()
     for company in companies:
+
         print company.symbol
-        quotes = Quote.query.filter(Quote.company_id == company.id).order_by(Quote.date).one()
+        try:
+            quotes = Quote.query.filter(Quote.company_id == company.id).order_by(Quote.date).limit(1).one()
+        except NoResultFound:
+            app.logger.warning('%s has no quotes' % company.symbol)
+            continue
         print quotes.date
+        print ''
+
+
+def market_days_last_year():
+    the_days = []
+    for x in xrange(0, 10):
+        val = datetime.now() - timedelta(days=x)
+        print val
+        print x
+        print misc.markets_open(val, True)
         print ''
 
 if __name__ == "__main__":
