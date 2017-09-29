@@ -7,6 +7,7 @@ Options:
     --one_year          Get 365 day data on for all companies in the system.
     --daily             Get daily quotes from yahoo.
     --realtime          Runs the new realtime platform.
+    --dividends         Runs the dividends scraper.
     --stock             The symbol to run data jobs against.
     --test              Runs some debug tests.
     --debug             Run the debugger.
@@ -20,6 +21,7 @@ from datetime import datetime, timedelta
 import csv
 from sqlalchemy import desc
 from yahoo_finance import Share
+from bs4 import BeautifulSoup
 
 sys.path.append("../..")
 from app import app
@@ -177,6 +179,20 @@ def get_realtime_quotes():
         print 'Markets are closed'
 
 
+def dividends():
+    """
+    """
+    url = "http://www.nasdaq.com/symbol/%s/dividend-history"
+    user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0'
+    for company in cc.watchlist():
+        print url % company.symbol.lower()
+        r = requests.get(url, headers={'User-Agent': user_agent})
+        print r.text
+        soup = BeautifulSoup(r.text, 'html5lib')
+        print soup
+        exit()
+
+
 def test():
     companies = cc.watchlist()
     # companies_to_run = len(companies)
@@ -212,6 +228,8 @@ if __name__ == "__main__":
         get_daily_quotes()
     elif args['--realtime']:
         get_realtime_quotes()
+    elif args['--dividends']:
+        dividends()
     elif args['--test']:
         test()
 
