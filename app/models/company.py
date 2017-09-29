@@ -25,6 +25,7 @@ class Company(Base):
     low_52_weeks = Column(Float)
     low_52_weeks_date = Column(DateTime)
     meta = relationship('CompanyMeta', back_populates="company")
+    dividend = relationship('CompanyDividend', back_populates="company")
 
     __table_args__ = (
         UniqueConstraint('symbol', 'exchange', name='uix_1'),
@@ -71,5 +72,21 @@ class CompanyMeta(Base):
 
     def __repr__(self):
         return '<CompanyMeta %s, %s>' % (self.key, self.id)
+
+
+class CompanyDividend(Base):
+
+    __tablename__ = 'companies_dividend'
+
+    company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
+    eff_date = Column(DateTime)
+    declaration_date = Column(DateTime)
+    record_date = Column(DateTime)
+    pay_date = Column(DateTime)
+    price = Column(Float, nullable=False)
+    company = relationship("Company", back_populates="dividend")
+
+    def __repr__(self):
+        return '<CompanyDividend %s, %s>' % (self.price, self.pay_date)
 
 # End File: stocky/app/models/company.py
