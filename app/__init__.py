@@ -50,6 +50,7 @@ def register_logging(app):
     handler = TimedRotatingFileHandler(app_log_file, when='midnight', interval=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
 
 
 def register_jinja_funcs(app):

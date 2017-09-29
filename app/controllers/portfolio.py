@@ -44,6 +44,7 @@ def index():
     company_qry = company_qry[:-1]
 
     app.logger.info(company_ids)
+
     # Load the companeis
     companies = {}
     for c_id in company_ids:
@@ -59,11 +60,13 @@ def index():
 
 
 @portfolio.route('/event/form')
+@requires_auth
 def form_event():
     return render_template('portfolio/add_event.html')
 
 
 @portfolio.route('/event/add', methods=['POST'])
+@requires_auth
 def add_event():
     pe = PortfolioEvent()
 

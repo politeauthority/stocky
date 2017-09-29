@@ -21,7 +21,7 @@ def index():
     return str(session)
 
 
-@auth.route('/login',  methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     """
     Verify credentials and build the user session.
@@ -75,7 +75,11 @@ def signup_submit():
 
 @auth.route('/error')
 def error():
-    return render_template('errors/403.html')
+    """
+    Generic 403 Forbidden Error
+
+    """
+    return render_template('errors/403.html'), 403
 
 
 # End File: stocky/app/controllers/auth.py
