@@ -1,23 +1,21 @@
 {% extends "layout.html" %}
 {%block title%}{{company.symbol}} | Stocky{%endblock%}
 {% block javascript%}
-    <script src="/static/vendor/flot/excanvas.min.js"></script>
-    <script src="/static/vendor/flot/jquery.flot.js"></script>
-    <script src="/static/vendor/flot/jquery.flot.resize.js"></script>
-    <script src="/static/vendor/flot/jquery.flot.time.js"></script>
-    <script src="/static/vendor/flot/jquery.flot.symbol.js"></script>
-    <!-- <script src="/static/vendor/flot/jquery.flot.axislabels.js"></script> -->
-    <script src="/static/vendor/flot-tooltip/jquery.flot.tooltip.min.js"></script>
-    <!-- <script src="/static/data/flot-data.js"></script> -->
+    <script src="/static/vendor/raphael/raphael.min.js"></script>
+    <script src="/static/vendor/morrisjs/morris.min.js"></script>
 
     <script type=text/javascript>
         $(document).ready(function() {
-            var filters = [{"name": "company_id", "op": "==", "val": {{company.id}}}];
-            var order_by = [{"field":"date","direction":"desc"}];
-            var limit = [{"field":"date","direction":"desc"}]
+            var filters = [
+                {"name": "company_id", "op": "==", "val": {{company.id}}},
+                {"name": "date", "op": ">=", "val": '2016-10-10'}];
+            var order_by = [{"field":"date", "direction":"desc"}];
             data_request = $.ajax({
                 url: '/api/quotes',
-                data: {"q": JSON.stringify({"filters": filters, 'order_by': order_by})},
+                data: {"q": JSON.stringify({
+                    "filters": filters,
+                    'order_by': order_by,
+                    "limit": 365})},
                 dataType: "json",
                 contentType: "application/json",
                 success: function(data){
@@ -41,6 +39,10 @@
                     price_box_color = 'red';
                 }
 
+                console.log(data.num_results);
+                console.log(data.total_pages);
+                console.log(data.objects.length);
+
                 $('#company_basic_stat').removeClass('panel-primary').addClass('panel-' + price_box_color);
                 $('#company_price').text(data.objects[0].close);
                 $('#day_price_change').text((dollar_change).toFixed(2));
@@ -61,71 +63,26 @@
                     if(data.objects[i].high > week_52_high){
                         week_52_high = data.objects[i].high;
                     }
-                    window.chart_data.push([new Date(data.objects[i].date), data.objects[i].close]);
-                    console.log(window.chart_data);
+                    window.chart_data.push({
+                        period: data.objects[i].date,
+                        price: data.objects[i].close,
+                        count: i,
+                    });
                 }
                 $('#stat_52_week_low_data').text('$ ' + week_52_low);
                 $('#stat_52_week_high_data').text('$ ' + week_52_high);
-            }
 
-            console.log(window.chart_data);
-            //Flot Multiple Axes Line Chart
-            var oilprices = window.chart_data;
-            console.log('do stuff.');
-            console.log(oilprices);
-
-            function euroFormatter(v, axis) {
-                return v.toFixed(axis.tickDecimals) + "€";
-            }
-
-            function doPlot(position) {
-                $.plot($("#flot-line-chart-multi"), [{
-                    data: oilprices,
-                    label: "Company Price ($)",
-                    // points: 'triangle'
-                }], {
-                    xaxes: [{
-                        mode: 'time',
-                        tickSize: [1, "month"],
-                        tickLength: 0,
-                        axisLabel: "2012",
-                        axisLabelUseCanvas: true,
-                        axisLabelFontSizePixels: 12,
-                        axisLabelFontFamily: 'Verdana, Arial',
-                        axisLabelPadding: 10
-                    }],
-                    yaxes: [{
-                        min: 0
-                    }, {
-                        // align if we are to the right
-                        alignTicksWithAxis: position == "right" ? 1 : null,
-                        position: position,
-                        tickFormatter: euroFormatter
-                    }],
-                    legend: {
-                        position: 'nw'
-                    },
-                    grid: {
-                        hoverable: true //IMPORTANT! this is needed for tooltip to work
-                    },
-                    tooltip: true,
-                    tooltipOpts: {
-                        content: "%s for %x was %y",
-                        xDateFormat: "%m %d",
-
-                        onHover: function(flotItem, $tooltipEl) {
-                            // console.log(flotItem, $tooltipEl);
-                        }
-                    },
-                    colors: ["#5cb85c", "#0022FF"]
+                Morris.Area({
+                    element: 'morris-area-chart',
+                    data: window.chart_data,
+                    xkey: 'count',
+                    ykeys: ['price'],
+                    labels: ['Price'],
+                    pointSize: 2,
+                    hideHover: 'auto',
+                    resize: true
                 });
             }
-
-            doPlot("right");
-
-            $("button").click(function() {
-                doPlot($(this).text());
-            });
         });
     </script>
 {%endblock%}
@@ -267,7 +224,7 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="flot-chart">
-                        <div style="width:100%;height:100%" class="flot-chart-content" id="flot-line-chart-multi"></div>
+                        <div id="morris-area-chart"></div>
                     </div>
                 </div>
                 <!-- /.panel-body -->
