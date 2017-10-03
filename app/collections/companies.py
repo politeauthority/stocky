@@ -14,6 +14,7 @@ watchlist_symbols = ['AAPL', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR'
 def by_symbols(symbols):
     """
     Get companies by symbol
+
     :param symbols:
     :type symbols: list
     :return: Company objects
