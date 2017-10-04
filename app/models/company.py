@@ -14,9 +14,9 @@ class Company(Base):
 
     symbol = Column(String(10), nullable=False)
     name = Column(String(128), nullable=False)
-    price = Column(Float, nullable=False)
+    price = Column(Float)
     market_cap = Column(Float)
-    ipo_year = Column(String(20))
+    ipo_date = Column(DateTime)
     sector = Column(String(128))
     industry = Column(String(128))
     exchange = Column(String(128))
@@ -46,7 +46,7 @@ class Company(Base):
         self.symbol = obj.symbol
         self.name = obj.name
         self.market_cap = obj.market_cap
-        self.ipo_year = obj.ipo_year
+        self.ipo_date = obj.ipo_date
         self.sector = obj.sector
         self.industry = obj.industry
         self.exchange = obj.exchange

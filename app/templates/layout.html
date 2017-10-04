@@ -98,6 +98,11 @@
                                     <a href="/portfolio"><i class="fa fa-folder-open fa-fw"></i> Portoflio</a>
                                 </li>
                             {%endif%}
+                            {%if session.get('authenticated')%}
+                                <li>
+                                    <a href="/admin"><i class="fa fa-archive fa-fw"></i> Admin</a>
+                                </li>
+                            {%endif%}
                             <li>
                                 <a href="/about"><i class="fa fa-info fa-fw"></i> About</a>
                             </li>
