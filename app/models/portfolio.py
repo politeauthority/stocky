@@ -20,7 +20,7 @@ class Portfolio(Base):
         order_by="desc(PortfolioEvent.date)",
         primaryjoin="Portfolio.id==PortfolioEvent.portfolio_id")
 
-    def __init__(self, id):
+    def __init__(self, id=None):
         self.id = id
 
     def __repr__(self):
@@ -39,8 +39,24 @@ class PortfolioEvent(Base):
     type = Column(String(10), nullable=False)
     portfolio = relationship('Portfolio', back_populates="events")
 
-    def __init__(self, id=None):
-        self.id = id
+    def __init__(self, _id=None):
+        if _id:
+            self.id = _id
+            self.__build_obj__()
+
+    def __build_obj__(self):
+        """
+        Builds the PortfolioEvent object.
+
+        """
+        obj = self.query.filter(PortfolioEvent.id == self.id).one()
+        self.portfolio_id = obj.portfolio_id
+        self.company_id = obj.company_id
+        self.price = obj.price
+        self.count = obj.count
+        self.date = obj.date
+        self.type = obj.date
+        self.portfolio = obj.portfolio
 
     def __repr__(self):
         return '<PortfolioEvent %r, %r>' % (self.id, self.price)

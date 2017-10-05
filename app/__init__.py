@@ -37,6 +37,7 @@ from controllers.portfolio import portfolio as ctrl_portfolio
 from controllers.search import search as ctrl_search
 from controllers.auth import auth as ctrl_auth
 from controllers.admin import admin as ctrl_admin
+from controllers.user import user as ctrl_user
 
 
 def register_logging(app):
@@ -76,6 +77,7 @@ def register_blueprints(app):
     app.register_blueprint(ctrl_search)
     app.register_blueprint(ctrl_auth)
     app.register_blueprint(ctrl_admin)
+    app.register_blueprint(ctrl_user)
 
 
 def register_api(app):

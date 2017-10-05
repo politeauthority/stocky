@@ -2,77 +2,74 @@
 
 """
 
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, session
 
-from app import app
-from app.helpers.decorators import requires_auth
-from app.models.company import Company
+from app.collections import companies as cc
+from app.collections import portfolios as pc
 from app.models.portfolio import Portfolio, PortfolioEvent
+from app.helpers.decorators import requires_auth
 
 portfolio = Blueprint('Portfolio', __name__, url_prefix='/portfolio')
 
 
 @portfolio.route('')
+@portfolio.route('/<portfolio_id>')
 @requires_auth
-def index():
+def index(portfolio_id=None):
     """
     Portfolio Index page
 
     """
-    user_portfolio = Portfolio.query.filter(Portfolio.id == 1).one()
-
-    # Get all the distinct companies out of the events
-    company_ids = []
-    positions = {}
-    totals = {
-        'profit': 0,
-    }
-    companies = {}
-
-    for e in user_portfolio.events:
-
-        if e.company_id not in companies:
-            companies[e.company_id] = Company(e.company_id)
-
-        if e.company_id not in positions:
-            positions[e.company_id] = {}
-            positions[e.company_id]['investment'] = 0
-            positions[e.company_id]['num_shares'] = 0
-            positions[e.company_id]['profit'] = 0
-
-        if e.type == 'sell':
-            # positions[e.company_id]['investment'] += (e.price * e.count)
-            positions[e.company_id]['profit'] += (e.price * e.count)
-            positions[e.company_id]['num_shares'] += e.count
-        elif e.type == 'dividend':
-            positions[e.company_id]['profit'] += (e.price * e.count)
-        elif e.type == 'buy':
-            positions[e.company_id]['investment'] += (e.price * e.count)
-            positions[e.company_id]['profit'] = positions[e.company_id]['profit'] - (e.price * e.count)
-            positions[e.company_id]['num_shares'] = positions[e.company_id]['num_shares'] - e.count
-
-    for c_id, position in positions.iteritems():
-        print positions
-        print ''
-        print ''
-        if 'num_shares' in position and position['num_shares'] == 0:
-            totals['profit'] += positions[c_id]['profit']
-
-    # company_qry = ''
-    # for x in company_ids:
-    #     company_qry += '%s,' % x
-    # company_qry = company_qry[:-1]
-
-    app.logger.info(company_ids)
-
+    if not portfolio_id:
+        portfolio_id = 1
+    info = pc.by_portfolio(portfolio_id)
+    portfolios = Portfolio.query.filter(Portfolio.user_id == session['user_id']).all()
     d = {
-        'portfolio': user_portfolio,
-        'companies': companies,
-        'positions': positions,
+        'positions': info['positions'],
+        'companies': info['companies'],
+        'portfolio': info['portfolio'],
         # 'company_qry': company_qry,
-        'totals': totals
+        'totals': info['totals'],
+        'portfolios': portfolios
     }
     return render_template('portfolio/index.html', **d)
+
+
+@portfolio.route('/portfolio/form')
+@portfolio.route('/portfolio/form/<portfolio_id>')
+@requires_auth
+def form_portfolio(portfolio_id=None):
+    """
+    Form for creating, saving and deleting a Portfolio
+
+    :param portfolio_id: Portforlio.id to be edited or deleted
+    :type portfolio_id: int
+    """
+    d = {}
+    d['portfolio'] = None
+    d['edit'] = False
+    if portfolio_id:
+        event = Portfolio().query.filter(Portfolio.id == portfolio_id).one()
+        if event:
+            d['portfolio'] = event
+            d['portfolio'] = True
+    return render_template('portfolio/portfolio_form.html', **d)
+
+
+@portfolio.route('/portfolio/save', methods=['POST'])
+@requires_auth
+def save_portfolio():
+    """
+    Save a new or update a PortfolioEvent
+
+    """
+    p = Portfolio()
+    if request.form.get('id'):
+        p.id = request.form['portfolio_id']
+    p.name = request.form['portfolio_name']
+    p.user_id = session['user_id']
+    p.save()
+    return redirect('/portfolio')
 
 
 @portfolio.route('/event/form')
@@ -86,6 +83,8 @@ def form_event(event_id=None):
     :type event_id: int
     """
     d = {}
+    d['companies'] = cc.all('symbol')
+    d['portfolios'] = pc.by_user_id(session['user_id'])
     d['event'] = None
     d['edit'] = False
     if event_id:
@@ -126,7 +125,7 @@ def delete_event(event_id):
     :type event_id: int
     """
 
-    x = PortfolioEvent().query.filter(PortfolioEvent.id == event_id).one()
-    return str(x)
+    PortfolioEvent.query.filter(PortfolioEvent.id == event_id).delete()
+    return redirect('/portfolio')
 
 # End File: stocky/app/controllers/portfolio.py

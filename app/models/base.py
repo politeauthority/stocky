@@ -17,6 +17,7 @@ class Base(db.Model):
     def __init__(self, _id=None):
         if _id:
             self.id = _id
+            self.__build_obj__()
 
     def save(self):
         if not self.id:

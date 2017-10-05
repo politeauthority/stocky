@@ -34,7 +34,7 @@ def watchlist():
     return by_symbols(watchlist_symbols)
 
 
-def all():
+def all(order_by=None):
     """
     Gets all companies in the database
 

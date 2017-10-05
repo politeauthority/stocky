@@ -82,7 +82,7 @@
                                 <a href="/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                             </li>
                             <li>
-                                <a href="/companies"><i class="fa fa-building-o fa-fw"></i>Companies<span class="fa arrow"></span></a>
+                                <a href="#"><i class="fa fa-building-o fa-fw"></i> Companies<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
                                         <a href="/recent">Recently Updated</a>
@@ -100,7 +100,15 @@
                             {%endif%}
                             {%if session.get('authenticated')%}
                                 <li>
-                                    <a href="/admin"><i class="fa fa-archive fa-fw"></i> Admin</a>
+                                    <a href="#"><i class="fa fa-archive fa-fw"></i> Admin<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="/admin/company/form">Add Company</a>
+                                        </li>
+                                        <li>
+                                            <a href="/admin/dividend/form">Add Dividend</a>
+                                        </li>
+                                    </ul>
                                 </li>
                             {%endif%}
                             <li>

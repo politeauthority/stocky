@@ -33,6 +33,7 @@ def login():
         redirect('login-fail')
     session['authenticated'] = True
     session['user_id'] = user.id
+    session['user_level'] = 'admin'
     return redirect('/dashboard')
 
 

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{%block title%}Portfolio{%endblock%}
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{%if edit%}Edit{%else%}Add{%endif%} Portfolio</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="/portfolio">Portfolio</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <form role="form" action="/portfolio/portfolio/save" method="POST" lpformnum="1" _lpchecked="1">
+                    <div class="form-group">
+                        <label>Portfolio Name</label>
+                        <input name="portfolio_name" class="form-control" {%if edit%}value={{portfolio.name}}{%endif%} >
+                        <p class="help-block">The name of your portfolio.</p>
+                    </div>
+                    {%if edit%}
+                        <a href="/portfolio/portfolio/delete/{{portfolio.id}}" class="btn btn-default btn-danger">Delete</a>
+                    {%else%}
+                        <button type="reset" class="btn btn-default btn-danger">Reset</button>
+                    {%endif%}
+
+                    <button type="submit" class="btn btn-default btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+

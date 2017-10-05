@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{%block title%}Portfolio{%endblock%}
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Add Dividend</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <form role="form" action="/admin/dividend/add" method="POST" lpformnum="1" _lpchecked="1">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select name="dividend_company_id" class="form-control">
+                            <option></option>
+                            {%for company in companies %}
+                                <option value="{{company.id}}">{{company.symbol}}</option>
+                            {%endfor%}
+                        </select>
+                        <p class="help-block">The company or ETF traded.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Effective Date</label>
+                        <input name="dividend_eff_date" class="form-control">
+                        <p class="help-block">The dividend's effective date.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Declaration Date</label>
+                        <input name="dividend_declaration_date" class="form-control" placeholder="2017-10-04">
+                        <p class="help-block">The dividend's declaration date.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Record Date</label>
+                        <input name="dividend_record_date" class="form-control">
+                        <p class="help-block">The dividend's record date.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Pay Date</label>
+                        <input name="dividend_pay_date" class="form-control">
+                        <p class="help-block">The dividend's pay date.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input name="dividend_price" class="form-control">
+                        <p class="help-block">The divdend paid price.</p>
+                    </div>
+                    <button type="reset" class="btn btn-default btn-danger">Reset</button>
+                    <button type="submit" class="btn btn-default btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

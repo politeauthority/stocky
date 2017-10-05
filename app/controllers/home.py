@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, flash, g, session, redire
 from flask import Blueprint, render_template
 
 from app.collections import companies as cc
-from app.models.company import Company
+from app.models.company import Company, CompanyDividend
 from app.models.quote import Quote
 
 home = Blueprint('Home', __name__, url_prefix='/')
@@ -24,9 +24,9 @@ def index():
     d['data_stats'] = {
         'total_companies': Company.query.count(),
         'total_quotes': Quote.query.count(),
+        'total_dividends': CompanyDividend.query.count(),
+        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
     }
-    d['recent_companies'] = Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
-
     return render_template('home/dashboard.html', **d)
 
 
@@ -40,6 +40,7 @@ def dashboard():
     d['data_stats'] = {
         'total_companies': Company.query.count(),
         'total_quotes': Quote.query.count(),
+        'total_dividends': CompanyDividend.query.count(),
         'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
     }
     return render_template('home/dashboard.html', **d)
@@ -49,7 +50,8 @@ def dashboard():
 def companies():
     """
     Companies Roster Page
-    @todo this should be paginated
+    This is not currenty linked.
+    @todo this should be paginated.
 
     """
     c_query = Company.query.order_by(Company.ts_updated)

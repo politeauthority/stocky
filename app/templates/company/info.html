@@ -207,17 +207,7 @@
                 <!-- /.panel-body -->
             </div>
             <!-- /.panel -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
-                </div>
-                <div class="panel-body">
-                    <div id="morris-donut-chart"></div>
-                    <a href="#" class="btn btn-default btn-block">View Details</a>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
+
         </div>
         <!-- /.col-lg-4 -->
 
@@ -277,6 +267,35 @@
             <!-- /.panel -->
         </div>
         <!-- /.col-lg-8 -->
+
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Dividend History
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>Pay Date</th>
+                            <th>Price</th>
+                        </thead>
+                        <tbody>
+                            {%for dividend in company.dividend%}
+                                <tr>
+                                    <td>{{dividend.pay_date|time_ago}}</td>
+                                    <td>{{dividend.price|fmt_currency}}</td>
+                                </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                    <div id="morris-donut-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-4 -->
+
     </div>
     <!-- /.row -->
 

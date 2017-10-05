@@ -19,14 +19,29 @@
             <div class="panel">
                 <form role="form" action="/portfolio/event/save" method="POST" lpformnum="1" _lpchecked="1">
                     <div class="form-group">
-                        <label>Company ID</label>
-                        <input name="company_id" class="form-control" {%if edit%}value={{event.company_id}}{%endif%} >
-                        <p class="help-block">The company ID for portfolio event.</p>
+                        <label>Company</label>
+                        <select name="company_id" class="form-control">
+                            {%if edit%}
+                                <option value="{{event.company_id}}">{{event.company_id}}</option>
+                            {%else%}
+                                <option></option>
+                            {%endif%}
+                            {%for company in companies %}
+                                <option value="{{company.id}}">{{company.symbol}}</option>
+                            {%endfor%}
+                        </select>
+                        <p class="help-block">The company or ETF traded.</p>
                     </div>
                     <div class="form-group">
-                        <label>Portfolio ID</label>
-                        <input name="portfolio_id" class="form-control" {%if edit%}value={{event.portfolio_id}}{%else%}value="1"{%endif%}>
-                        <p class="help-block">The company ID for portfolio event.</p>
+
+                        <label>Portfolio</label>
+                        <select name="portfolio_id" class="form-control">
+                            <option></option>
+                            {%for portfolio in portfolios %}
+                                <option value="{{portfolio.id}}">{{portfolio.name}}</option>
+                            {%endfor%}
+                        </select>
+                        <p class="help-block">The portfolio the event occoured on.</p>
                     </div>
                     <div class="form-group">
                         <label>Price</label>
@@ -60,7 +75,7 @@
                     {%else%}
                         <button type="reset" class="btn btn-default btn-danger">Reset</button>
                     {%endif%}
-                    
+
                     <button type="submit" class="btn btn-default btn-success">Submit</button>
                 </form>
             </div>
