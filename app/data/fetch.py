@@ -11,6 +11,7 @@ Options:
     --stock             The symbol to run data jobs against.
     --test              Runs some debug tests.
     --debug             Run the debugger.
+    --sym=<sym>               Symbols to run against the program
 
 """
 from docopt import docopt
@@ -113,7 +114,13 @@ if __name__ == "__main__":
     args = docopt(__doc__)
 
     if args['--one_year']:
-        google_quotes.all_company_one_year()
+        if args['--sym'] and ',' in args['--sym']:
+            symbols = args['--sym'].split(',')
+        elif args['--sym']:
+            symbols = [args['--sym']]
+        else:
+            symbols = []
+        google_quotes.all_company_one_year(symbols)
     elif args['--daily']:
         get_daily_quotes()
     elif args['--realtime']:

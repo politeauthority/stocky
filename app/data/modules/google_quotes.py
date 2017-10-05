@@ -21,17 +21,23 @@ download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
 
 
-def all_company_one_year():
+def all_company_one_year(symbols):
     """
     Google provides a 365 day csv of stock prices publicly. This is how we do it.
 
     """
+    if not symbols:
+        companies = cc.all()
+    elif 'watchlist' in symbols:
+        companies = cc.watchlist()
+    else:
+        companies = cc.by_symbols(symbols)
+
     base_url = "https://www.google.com/finance/historical?output=csv&q=%s"
 
     if not os.path.exists(download_path):
         os.makedirs(download_path)
     # companies = cc.all()
-    companies = cc.all()
 
     companies_to_run = len(companies)
     count = 0

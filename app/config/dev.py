@@ -7,6 +7,7 @@ SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
     os.environ.get('STOCKY_MYSQL_PORT', 3306),
     os.environ.get('STOCKY_MYSQL_NAME'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+DEBUG_TB_INTERCEPT_REDIRECTS = False
 DEBUG = True
 TESTING = True
 THREADS_PER_PAGE = 2

@@ -3,6 +3,7 @@
 """
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref
 
 from app.models.base import Base
 
@@ -13,7 +14,11 @@ class Portfolio(Base):
 
     user_id = Column(Integer, nullable=False)
     name = Column(String(20), nullable=False)
-    events = relationship('PortfolioEvent', back_populates="portfolio")
+    events = relationship(
+        'PortfolioEvent',
+        back_populates="portfolio",
+        order_by="desc(PortfolioEvent.date)",
+        primaryjoin="Portfolio.id==PortfolioEvent.portfolio_id")
 
     def __init__(self, id):
         self.id = id

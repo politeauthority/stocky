@@ -51,11 +51,15 @@
                 </thead>
                 <tbody>
                     {%for company_id, position in positions.iteritems()%}
+                        {%if position.num_shares %}
                         <tr>
-                            <td>{{companies[company_id].name}}</td>
-                            <td>$ {{position.investment}}</td>
-                            <td></td>
+                            <td>
+                                <a href="/company/{{companies[company_id].symbol}}">{{companies[company_id].name}}</a>
+                            </td>
+                            <td>$ {{position.investment|abs}}</td>
+                            <td>$ {{position.profit|abs}}</td>
                         </tr>
+                        {%endif%}
                     {%endfor%}
                 </tbody>
                 <thead>
@@ -67,6 +71,45 @@
                 </thead>
             </table>
         </div>
+        <div class="panel panel-default">
+            <h2>Past Positions</h2>
+            <table class='table table-striped, table-responsive'>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Investment</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for company_id, position in positions.iteritems()%}
+                        {%if position.num_shares == 0 %}
+                        <tr>
+                            <td>
+                                <a href="/company/{{companies[company_id].symbol}}">{{companies[company_id].name}}</a>
+                            </td>
+                            <td>$ {{position.investment}}</td>
+                            <td>$ {{position.profit}}</td>
+                        </tr>
+                        {%endif%}
+                    {%endfor%}
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Investment</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>{{totals.profit}}
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
     </div>
 
     <div class="row">
@@ -76,6 +119,7 @@
                 <table class='table table-striped, table-responsive'>
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Company</th>
                             <th>Shares</th>
                             <th>Price</th>
@@ -93,6 +137,7 @@
                                 <td>$ {{e.price}}</td>
                                 <td>$ {{e.price * e.count}}</td>
                                 <td> {{e.date|time_ago}}</td>
+                                <td><a href="/portfolio/event/form/{{e.id}}"><i class="fa fa-pencil"></i></a></td>
                             </tr>
                         {%endfor%}
                     </tbody>

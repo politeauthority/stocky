@@ -4,48 +4,63 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Add Portfolio Event</h1>
+            <h1 class="page-header">{%if edit%}Edit{%else%}Add{%endif%} Portfolio Event</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="/portfolio">Portfolio</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-6">
             <div class="panel">
-                <form role="form" action="/portfolio/event/add" method="POST" lpformnum="1" _lpchecked="1">
+                <form role="form" action="/portfolio/event/save" method="POST" lpformnum="1" _lpchecked="1">
                     <div class="form-group">
                         <label>Company ID</label>
-                        <input name="company_id" class="form-control">
+                        <input name="company_id" class="form-control" {%if edit%}value={{event.company_id}}{%endif%} >
                         <p class="help-block">The company ID for portfolio event.</p>
                     </div>
                     <div class="form-group">
                         <label>Portfolio ID</label>
-                        <input name="portfolio_id" value="1" class="form-control">
+                        <input name="portfolio_id" class="form-control" {%if edit%}value={{event.portfolio_id}}{%else%}value="1"{%endif%}>
                         <p class="help-block">The company ID for portfolio event.</p>
                     </div>
                     <div class="form-group">
                         <label>Price</label>
-                        <input name="price" class="form-control">
+                        <input name="price" class="form-control" {%if edit%}value={{event.price}}{%endif%}>
                         <p class="help-block">The price for portfolio event.</p>
                     </div>
                     <div class="form-group">
                         <label>Count</label>
-                        <input name="count" class="form-control">
+                        <input name="count" class="form-control" {%if edit%}value={{event.count}}{%endif%}>
                         <p class="help-block">Number of shares.</p>
                     </div>
                     <div class="form-group">
                         <label>Date</label>
-                        <input name="date" class="form-control" value="2017-10-04">
+                        <input name="date" class="form-control" {%if edit%}value={{event.date}}{%else%}value="2017-10-05"{%endif%}>
                         <p class="help-block">The date for portfolio event.</p>
                     </div>
                     <div class="form-group">
                         <label>Type</label>
                         <select name="type" class="form-control">
+                            {%if edit%}
+                                <option value="{{event.type}}">{{event.type}}</option>
+                            {%endif%}
                             <option value="buy">Buy</option>
                             <option value="sell">Sell</option>
+                            <option value="dividend">Dividend</option>
                         </select>
                         <p class="help-block">The type of event</p>
                     </div>
-                    <button type="reset" class="btn btn-default btn-danger">Reset</button>
+                    {%if edit%}
+                        <a href="/portfolio/event/delete/{{event.id}}" class="btn btn-default btn-danger">Delete</a>
+                    {%else%}
+                        <button type="reset" class="btn btn-default btn-danger">Reset</button>
+                    {%endif%}
+                    
                     <button type="submit" class="btn btn-default btn-success">Submit</button>
                 </form>
             </div>

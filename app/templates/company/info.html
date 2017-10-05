@@ -39,9 +39,9 @@
                     price_box_color = 'red';
                 }
 
-                console.log(data.num_results);
-                console.log(data.total_pages);
-                console.log(data.objects.length);
+                // console.log(data.num_results);
+                // console.log(data.total_pages);
+                // console.log(data.objects.length);
 
                 $('#company_basic_stat').removeClass('panel-primary').addClass('panel-' + price_box_color);
                 $('#company_price').text(data.objects[0].close);
@@ -177,6 +177,51 @@
             </div>
         </div>
 
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bell fa-fw"></i> Admin Stats
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-building-o fa-fw"></i> Company ID
+                            <span class="pull-right text-muted"><strong>{{company.id}}</strong></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-comment fa-fw"></i> Quotes
+                            <span class="pull-right text-muted"><strong>{{quote_count}}</strong></span>
+
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-comment fa-fw"></i> Last updated
+                            <span class="pull-right text-muted"><strong>{{company.ts_updated|time_ago}}</strong></span>
+
+                        </a>
+
+                    </div>
+                    <!-- /.list-group -->
+                    <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
+                </div>
+                <div class="panel-body">
+                    <div id="morris-donut-chart"></div>
+                    <a href="#" class="btn btn-default btn-block">View Details</a>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-4 -->
+
+
 <!--         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -232,49 +277,6 @@
             <!-- /.panel -->
         </div>
         <!-- /.col-lg-8 -->
-        <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bell fa-fw"></i> Admin Stats
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-building-o fa-fw"></i> Company ID
-                            <span class="pull-right text-muted"><strong>{{company.id}}</strong></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-comment fa-fw"></i> Quotes
-                            <span class="pull-right text-muted"><strong>{{quote_count}}</strong></span>
-
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-comment fa-fw"></i> Last updated
-                            <span class="pull-right text-muted"><strong>{{company.ts_updated|time_ago}}</strong></span>
-
-                        </a>
-
-                    </div>
-                    <!-- /.list-group -->
-                    <a href="#" class="btn btn-default btn-block">View All Alerts</a>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
-                </div>
-                <div class="panel-body">
-                    <div id="morris-donut-chart"></div>
-                    <a href="#" class="btn btn-default btn-block">View Details</a>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-4 -->
     </div>
     <!-- /.row -->
 

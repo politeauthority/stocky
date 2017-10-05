@@ -35,9 +35,9 @@ def form_company():
 def add_company():
     """
     Method to save new company.
+
     """
     company = Company()
-
     company.name = request.form['company_name']
     company.symbol = request.form['company_symbol']
     company.ipo_year = request.form['company_ipo_date']
