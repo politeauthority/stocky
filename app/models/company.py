@@ -1,10 +1,13 @@
-"""Company - Models
+"""Company - MODELS
 
 """
 from sqlalchemy import Column, Integer, String, Float, DateTime, PickleType, Text
 from sqlalchemy import UniqueConstraint, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm.exc import NoResultFound
 
+from app import app
+from app import db
 from app.models.base import Base
 
 
@@ -56,6 +59,24 @@ class Company(Base):
         self.low_52_weeks_date = obj.low_52_weeks_date
         self.meta = obj.meta
 
+    def get_by_symbol(self, symbol):
+        """
+        Get a Company obj by the symbol.
+        @todo: Should expand this out to take an exchange as well.
+
+        :param symbol: The companies symbol
+        :type symbol: str
+        :return: Company
+        :rtype: Company obj
+        """
+        try:
+            company = self.query.filter(Company.symbol == symbol).one()
+            self.__build_obj__(company)
+            return self
+        except NoResultFound:
+            app.logger.warning('Could not find Company by symbol "%s"' % symbol)
+            return False
+
 
 class CompanyMeta(Base):
 
@@ -70,8 +91,28 @@ class CompanyMeta(Base):
     val_date = Column(DateTime)
     company = relationship("Company", back_populates="meta")
 
+    __table_args__ = (
+        UniqueConstraint('company_id', 'key', 'val_type', name='uix_1'),
+    )
+    value = None
+
     def __repr__(self):
         return '<CompanyMeta %s, %s>' % (self.key, self.id)
+
+    def save(self):
+        if self.val_type == 'str':
+            self.val_string = self.value
+        elif self.val_type == 'date':
+            self.val_date = self.value
+        elif self.val_type == 'pickle':
+            self.val_pickle = self.value
+        elif self.val_type == 'int':
+            self.val_pickle = self.value
+        elif self.val_type == 'date':
+            self.val_date = self.value
+        if not self.id:
+            db.session.add(self)
+        db.session.commit()
 
 
 class CompanyDividend(Base):

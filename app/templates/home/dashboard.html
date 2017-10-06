@@ -17,7 +17,7 @@
                             <i class="fa fa-building fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{data_stats['total_companies']}}</div>
+                            <div class="huge">{{data_stats['total_companies']|fmt_int}}</div>
                             <div>Tracked Companies</div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                             <i class="fa fa-database fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{data_stats['total_quotes']}}</div>
+                            <div class="huge">{{data_stats['total_quotes']|fmt_int}}</div>
                             <div>Tracked Quotes</div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                             <i class="fa fa-dollar fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{data_stats['total_dividends']}}</div>
+                            <div class="huge">{{data_stats['total_dividends']|fmt_int}}</div>
                             <div>Tracked Dividends</div>
                         </div>
                     </div>

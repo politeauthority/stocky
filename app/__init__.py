@@ -63,6 +63,7 @@ def register_jinja_funcs(app):
     app.jinja_env.filters['time_ago'] = misc_time.ago
     app.jinja_env.filters['fmt_date'] = misc_time.fmt_date
     app.jinja_env.filters['fmt_currency'] = jinja_filters.format_currency
+    app.jinja_env.filters['fmt_int'] = jinja_filters.fmt_int
     app.jinja_env.filters['percentage'] = common.get_percentage
 
 

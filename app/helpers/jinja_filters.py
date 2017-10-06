@@ -22,3 +22,9 @@ def format_currency(value):
         elif len(value_string[x + 1:]) < 1:
             return value_string + '00'
     return value_string
+
+
+def fmt_int(value):
+    """
+    """
+    return "{:,}".format(value)

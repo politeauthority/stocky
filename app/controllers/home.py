@@ -35,30 +35,24 @@ def dashboard():
     Dashboard
     Displays some statictics about the site, we'll probably hide these eventually
 
+    @note: This methods basically just the index right now.
+
     """
-    d = {}
-    d['data_stats'] = {
-        'total_companies': Company.query.count(),
-        'total_quotes': Quote.query.count(),
-        'total_dividends': CompanyDividend.query.count(),
-        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
-    }
-    return render_template('home/dashboard.html', **d)
+    return None
 
 
-@home.route('companies')
-def companies():
+@home.route('recent')
+def recently_updated():
     """
-    Companies Roster Page
-    This is not currenty linked.
-    @todo this should be paginated.
+    Recently updated companies
+    @todo: this should be paginated.
 
     """
     c_query = Company.query.order_by(Company.ts_updated)
     d = {}
     d['companies'] = Company.query.order_by(Company.ts_updated.desc()).limit(25).all()
     d['total_companies'] = c_query.count()
-    return render_template('home/companies.html', **d)
+    return render_template('home/recent.html', **d)
 
 
 @home.route('watchlist')

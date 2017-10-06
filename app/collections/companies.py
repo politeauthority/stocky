@@ -8,7 +8,7 @@ from app.models.company import Company
 
 watchlist_symbols = ['AAPL', 'TSLA', 'ERIC', 'BAC', 'VWO', 'MSFT', 'AMD', 'VSLR', 'EFX', 'SPYD', 'TSLA', 'NFLX', 'FB',
                      'DIS', 'GPRO', 'SBUX', 'F', 'BABA', 'FIT', 'ABBS', 'INTC', 'TWTR', 'ERIC', 'VMW', 'T', 'EXF',
-                     'ORCL', 'RDFN']
+                     'ORCL', 'RDFN', 'CACQ']
 
 
 def by_symbols(symbols):
@@ -18,10 +18,26 @@ def by_symbols(symbols):
     :param symbols:
     :type symbols: list
     :return: Company objects
-    :rtype: SqlAlchemey result of company objects.
+    :rtype: list SqlAlchemey result of company objects.
     """
     companies = Company.query.filter(Company.symbol.in_(symbols)).all()
     return companies
+
+
+def by_symbols_as_dict(symbols):
+    """
+    Get companies by symbol returned as a dict keyed by company id
+
+    :param symbols:
+    :type symbols: list
+    :return: Company objects
+    :rtype: dict SqlAlchemey result of company objects.
+    """
+    companies = Company.query.filter(Company.symbol.in_(symbols)).all()
+    ret_companies = {}
+    for c in companies:
+        ret_companies[c.id] = c
+    return ret_companies
 
 
 def watchlist():

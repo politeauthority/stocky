@@ -9,11 +9,17 @@ from app.models.base import Base
 
 
 class Portfolio(Base):
+    """
+    Model for the Portfolio. This connects the PortfolioEvents and are mainly just connected by a user.
+
+    """
 
     __tablename__ = 'portfolios'
 
     user_id = Column(Integer, nullable=False)
     name = Column(String(20), nullable=False)
+    cash = Column(Integer)
+    priority = Column(Integer)
     events = relationship(
         'PortfolioEvent',
         back_populates="portfolio",
@@ -28,6 +34,10 @@ class Portfolio(Base):
 
 
 class PortfolioEvent(Base):
+    """
+    Model for PortfolioEvents or interactions between a company, a quote and money.
+
+    """
 
     __tablename__ = 'portfolios_events'
 

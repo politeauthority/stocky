@@ -10,13 +10,15 @@ Options:
     --dividends         Runs the dividends scraper.
     --stock             The symbol to run data jobs against.
     --test              Runs some debug tests.
+    --wiki_prices       Gets stock data from wiki_prices
     --debug             Run the debugger.
-    --sym=<sym>               Symbols to run against the program
+    --sym=<sym>         Symbols to run against the program
 
 """
 from docopt import docopt
 import sys
 import os
+import csv
 import requests
 from yahoo_finance import Share
 from bs4 import BeautifulSoup
@@ -24,6 +26,7 @@ from bs4 import BeautifulSoup
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
+from app.models.company import Company, CompanyMeta
 from app.models.quote import Quote
 from app.helpers import misc_time
 
@@ -110,6 +113,55 @@ def dividends():
         exit()
 
 
+def import_wiki_prices():
+    """
+    Import quotes from that wiki prices outlet.
+
+    """
+    phile = os.path.join(download_path, 'WIKI_PRICES_212b326a081eacca455e13140d7bb9db.csv')
+    companies = {}
+    with open(phile, 'rb') as csvfile:
+        spamreader = csv.DictReader(csvfile)
+        for row in spamreader:
+            if row['ticker'] not in companies:
+                company = Company().get_by_symbol(row['ticker'])
+                companies[row['ticker']] = company
+            else:
+                company = companies[row['ticker']]
+            if not company:
+                app.logger.error('Skipping %s' % row['ticker'])
+                continue
+            if company.symbol == 'A':
+                continue
+            q = Quote()
+            q.company_id = company.id
+            q.date = row['date']
+            q.close = row['adj_close']
+            q.open = row['adj_open']
+            q.high = row['adj_high']
+            q.low = row['adj_low']
+            q.volume = row['adj_volume']
+            q.save()
+            company.save()
+            app.logger.info('Saving %s <%s>: %s %s' % (company.name, company.symbol, q.date, q.close))
+            # if float(row['ex-dividend']) > 0:
+            #     exit()
+
+
+def test():
+    companies = cc.by_symbols(['AAPL'])
+    for company in companies:
+        print company.name
+        meta = CompanyMeta()
+        meta.company_id = company.id
+        meta.key = 'test_meta'
+        meta.val_type = 'str'
+        meta.value = 'something'
+
+        print meta
+        meta.save()
+    print companies
+
 if __name__ == "__main__":
     args = docopt(__doc__)
 
@@ -129,5 +181,8 @@ if __name__ == "__main__":
         dividends()
     elif args['--test']:
         test()
+    elif args['--wiki_prices']:
+        import_wiki_prices()
+
 
 # End File: stocky/app/data/fetch.py

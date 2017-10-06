@@ -75,8 +75,23 @@ def ago(the_time):
     return "%s %s %s %s" % (prefix, value, unit, suffix)
 
 
-def fmt_date(the_date,):
-    return the_date.strftime(the_date, '%M-%d %Y')
+def fmt_date(the_date, fmt=None):
+    """
+    Formats the date, mostly a jinja template.
+    jinja template usage like {{var|fmt_date}}
+
+    :param the_date: The date to get a string from.
+    :type the_date: DateTime obk
+    :param fmt: Format mask for the date to return in
+    :type fmt: str
+    :return: String date representation
+    :rtype: str
+    """
+    if not the_date:
+        return ''
+    if not fmt:
+        fmt = '%I:%M:%S %p %b %d %Y'
+    return the_date.strftime(fmt)
 
 
 def utc_to_mountain(utc_time):

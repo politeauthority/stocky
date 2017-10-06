@@ -35,6 +35,8 @@ class Quote(Base):
 
     def save(self):
         """
+        Saves the quote, and updates if a record for that company.id and date
+
         """
         exists = None
         if not self.id:
