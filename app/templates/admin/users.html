@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{%block title%}Users{%endblock%}
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Users</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <table class="table table-striped">
+                    <tbody>
+                        {%for user in users%}
+                            <tr>
+                                <td>{{user.email}}</td>
+                                <td>{{user.last_login}}</td>
+                            </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+

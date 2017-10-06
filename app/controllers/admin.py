@@ -4,8 +4,9 @@
 
 from flask import Blueprint, render_template, request, redirect
 
-from app.models.company import Company, CompanyDividend
 from app.collections import companies as cc
+from app.models.company import Company, CompanyDividend
+from app.models.user import User
 from app.helpers.decorators import requires_auth
 
 admin = Blueprint('Admin', __name__, url_prefix='/admin')
@@ -55,7 +56,7 @@ def form_dividend():
 @requires_auth
 def add_dividend():
     """
-    Form to add a new dividend.
+    Form to add a new company dividend.
 
     """
     company = Company(request.form['dividend_company_id'])
@@ -69,5 +70,32 @@ def add_dividend():
     dividend.save()
     company.save()
     return redirect('/company/%s' % company.symbol)
+
+
+@admin.route('/users')
+@requires_auth
+def users():
+    """
+    Users roster and management
+
+    """
+    users = User.query.all()
+    d = {
+        'users': users
+    }
+    return render_template('admin/users.html', **d)
+
+
+@admin.route('/user/form')
+@requires_auth
+def form_user():
+    """
+    Form to add a new user.
+
+    """
+    d = {
+        'companies': cc.all('symbol')
+    }
+    return render_template('admin/add_user.html', **d)
 
 # End File: stocky/app/controllers/admin.py

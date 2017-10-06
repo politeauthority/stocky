@@ -17,6 +17,7 @@ class User(Base):
     email = Column(String(256), nullable=False)
     name = Column(String(256))
     password = Column(String(256), nullable=False)
+    last_login = Column(DateTime, nullable=False)
     type = Column(String(20))
     meta = relationship('UserMeta', back_populates="user")
 
