@@ -27,6 +27,9 @@ def index():
     if search:
         companies_seach = Company.query.filter(Company.symbol.like("%" + search_phrase + "%"))\
             .order_by(Company.ts_updated).all()
+        # If we match on a symbol and have only one result, redirect to that page.
+        if len(companies_seach) == 1:
+            redirect('/company/%s' % companies_seach[0].symbol)
         companies_seach += Company.query.filter(Company.name.like("%" + search_phrase + "%"))\
             .order_by(Company.ts_updated).all()
     if industry_phrase:

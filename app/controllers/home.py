@@ -2,13 +2,13 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect
 
 """
-from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template
 
 from app.collections import companies as cc
 from app.models.company import Company, CompanyDividend
 from app.models.quote import Quote
+from app.helpers import common
 
 home = Blueprint('Home', __name__, url_prefix='/')
 
@@ -69,7 +69,7 @@ def dividends():
 
     """
     # prelimiary_filter = CompanyDividend.eff_date >= (datetime.now() - timedelta(days=5))
-    dividends = CompanyDividend.query.filter().order_by(CompanyDividend.eff_date.desc()).limit(50).all()
+    dividends = CompanyDividend.query.order_by(CompanyDividend.eff_date.desc()).limit(50).all()
     companies = {}
     for divy in dividends:
         if divy.company_id not in companies:
@@ -98,7 +98,10 @@ def about():
     Static about page
 
     """
-    return render_template('home/about.html')
+    d = {
+        'database_file_size': common.get_db_zip_size()
+    }
+    return render_template('home/about.html', **d)
 
 
 @home.route('data-structure')

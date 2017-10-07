@@ -13,16 +13,16 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td>Company</td>
-                            <td>Last Close</td>
-                            <td>Last Update</td>
+                            <th>Company</th>
+                            <th>Last Close</th>
+                            <th>Last Update</th>
                         </tr>
                     </thead>
                     <tbody>
                         {%for company in companies%}
                             <tr>
                                 <td><a href="/company/{{company.symbol}}">{{company.name}}</a></td>
-                                <td>{{company.price}}</td>
+                                <td>$ {{company.price|fmt_currency}}</td>
                                 <td>{{company.ts_updated|fmt_date}}</td>
                             </tr>
                         {%endfor%}

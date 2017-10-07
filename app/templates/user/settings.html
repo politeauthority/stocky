@@ -9,6 +9,51 @@
     </div>
 
     <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Change E-mail Address</h4>
+                </div>
+
+                <div class="panel-body">
+                    <form role="form" action="/profile/change-email" method="POST" lpformnum="1" _lpchecked="1">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input name="user_email" value="{{user.email}}" class="form-control">
+                            <p class="help-block"></p>
+                        </div>
+                        <button type="submit" class="btn btn-default btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Change Password</h4>
+                </div>
+                <div class="panel-body">
+                    <form role="form" action="/profile/change-password" method="POST">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" name="new_password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password Again</label>
+                            <input type="password" name="new_password_2" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-default btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <ul>

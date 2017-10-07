@@ -69,9 +69,11 @@ def signup_submit():
 
     """
     if request.form['password'] != request.form['password2']:
+        # @todo: send reason for fail to user
         return redirect('/auth/sign-up-fail')
     already_signed_up = User.query.filter(User.email == request.form['email']).all()
     if len(already_signed_up) != 0:
+        # @todo: send reason for fail to user
         redirect('/auth/sign-up-fail')
     user = User()
     user.email = request.form['email']

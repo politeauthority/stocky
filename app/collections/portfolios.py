@@ -4,6 +4,8 @@
 import sys
 sys.path.append("../..")
 
+from sqlalchemy.orm.exc import NoResultFound
+
 from app.models.company import Company
 from app.models.portfolio import Portfolio
 
@@ -17,7 +19,16 @@ def by_portfolio(portfolio_id):
     :return:
     :rtype: dict
     """
-    user_portfolio = Portfolio.query.filter(Portfolio.id == portfolio_id).one()
+    return_dict = {
+        'positions': None,
+        'companies': None,
+        'totals': None,
+        'portfolio': None
+    }
+    try:
+        user_portfolio = Portfolio.query.filter(Portfolio.id == portfolio_id).one()
+    except NoResultFound:
+        return return_dict
 
     positions = {}
     totals = {
@@ -26,7 +37,7 @@ def by_portfolio(portfolio_id):
     companies = {}
 
     for e in user_portfolio.events:
-        local_companh_id = e.company_id
+        local_company_id = e.company_id
         # if e.company_id not in companies:
             # companies[local_companh_id] = Company(local_companh_id)
 

@@ -20,10 +20,13 @@ def index(portfolio_id=None):
     Portfolio Index page
 
     """
-    if not portfolio_id:
-        portfolio_id = 1
-    info = pc.by_portfolio(portfolio_id)
     portfolios = Portfolio.query.filter(Portfolio.user_id == session['user_id']).all()
+    if not portfolio_id and portfolios:
+        portfolio_id = portfolios[0].id
+    else:
+        redirect('/portfolio/form')
+    info = pc.by_portfolio(portfolio_id)
+
     d = {
         'positions': info['positions'],
         'companies': info['companies'],

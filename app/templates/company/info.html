@@ -172,6 +172,20 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="list-group">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td><b>IPO Date</b></td>
+                                        <td>
+                                            {%if company.ipo_date%}
+                                                {{company.ipo_date}}
+                                            {%endif%}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -290,9 +304,9 @@
                                     <tr>
                                         <td>
                                             {%if dividend.pay_date%}
-                                                {{dividend.pay_date|fmt_date}}
+                                                {{dividend.pay_date|fmt_date("%B %d, %Y")}}
                                             {%elif dividend.eff_date%}
-                                                {{dividend.eff_date|fmt_date('%m-%d-%Y')}}
+                                                {{dividend.eff_date|fmt_date("%b %d, %Y")}}
                                             {%endif%}
                                         </td>
                                         <td>{{dividend.price|fmt_currency}}</td>
