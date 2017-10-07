@@ -1,7 +1,12 @@
 # Stocky
 Stock application to view and track portfolios. Currently up at https://bad-at.life
 note: because of a current issue getting the run.sh script to run via Dockers 'CMD' tool you have to run another command after the container is started.
-This will be updated eventually
+This will be updated eventually. For now, make sure to execute the following command after booting up the docker container.
+
+```
+cd /opt/stocky/app
+./run.sh
+```
 
 
 ## Environmental Vars

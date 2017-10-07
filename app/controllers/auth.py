@@ -34,6 +34,8 @@ def login():
     session['authenticated'] = True
     session['user_id'] = user.id
     session['user_level'] = 'admin'
+    # @todo: make sure this is logging a somewhat legit IP, right now seems to be pulling private addr
+    #        and thats useless!
     login = UserLogin()
     login.user_id = session['user_id']
     login.ip = request.remote_addr

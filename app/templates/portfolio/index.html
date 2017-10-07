@@ -96,7 +96,6 @@
                                         {%if position.num_shares %}
                                         <tr>
                                             <td>
-                                                <a href="/company/{{companies[company_id].symbol}}">{{companies[company_id].name}}</a>
                                             </td>
                                             <td class="text-right">$ {{position.investment|abs|fmt_currency}}</td>
                                             <td class="text-right">$ {{position.profit|abs|fmt_currency}}</td>
@@ -138,7 +137,6 @@
                                         {%if position.num_shares == 0 %}
                                         <tr>
                                             <td>
-                                                <a href="/company/{{companies[company_id].symbol}}">{{companies[company_id].name}}</a>
                                             </td>
                                             <td class="text-right">$ {{position.investment|fmt_currency}}</td>
                                             <td class="text-right">$ {{position.profit|fmt_currency}}</td>
@@ -190,7 +188,6 @@
                                 {%for e in portfolio.events%}
                                     <tr class="{%if e.type == 'buy' %}danger{%else%}success{%endif%}">
                                         <td>
-                                            <a href="/company/{{companies[e.company_id].symbol}}">{{companies[e.company_id].name}}</a>
                                         </td>
                                         <td>{{e.count}}</td>
                                         <td>$ {{e.price}}</td>

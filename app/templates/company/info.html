@@ -276,13 +276,19 @@
                 <div class="panel-body">
                     <table class="table table-striped">
                         <thead>
-                            <th>Pay Date</th>
+                            <th>Date</th>
                             <th>Price</th>
                         </thead>
                         <tbody>
                             {%for dividend in company.dividend%}
                                 <tr>
-                                    <td>{{dividend.pay_date|time_ago}}</td>
+                                    <td>
+                                        {%if dividend.pay_date%}
+                                            {{dividend.pay_date|fmt_date}}
+                                        {%elif dividend.eff_date%}
+                                            {{dividend.eff_date|fmt_date('%m-%d-%Y')}}
+                                        {%endif%}
+                                    </td>
                                     <td>{{dividend.price|fmt_currency}}</td>
                                 </tr>
                             {%endfor%}

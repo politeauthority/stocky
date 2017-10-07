@@ -26,9 +26,9 @@ def by_portfolio(portfolio_id):
     companies = {}
 
     for e in user_portfolio.events:
-
-        if e.company_id not in companies:
-            companies[e.company_id] = Company(e.company_id)
+        local_companh_id = e.company_id
+        # if e.company_id not in companies:
+            # companies[local_companh_id] = Company(local_companh_id)
 
         if e.company_id not in positions:
             positions[e.company_id] = {}

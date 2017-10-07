@@ -4,18 +4,50 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Tracking {{total_companies}} Companies</h1>
+            <h1 class="page-header">Search</h1>
         </div>
     </div>
-
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <div class="panel panel-default">
-                <ul>
-                {%for company in search_results%}
-                    <li><a href="/company/{{company.symbol}}">{{company.name}}</a></li>
-                {%endfor%}
-                </ul>
+                <div class="panel-heading">
+                    <h4>Not absolutely sure what "{{search_term}}" is</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td>Symbol</td>
+                                <td>Company</td>
+                                <td>Industry</td>
+                                <td>Sector</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {%for company in companies%}
+
+                            <tr>
+                                <td>
+                                    <a href="/company/{{company.symbol}}">{{company.symbol}}</a>
+                                </td>
+                                <td>
+                                    <a href="/company/{{company.symbol}}">{{company.name}}</a>
+                                </td>
+                                <td>
+                                    {%if company.industry%}
+                                        {{company.industry}}
+                                    {%endif%}
+                                </td>
+                                <td>
+                                    {%if company.sector%}
+                                        {{company.sector}}
+                                    {%endif%}
+                                </td>
+                            </tr>
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

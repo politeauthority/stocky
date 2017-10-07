@@ -28,7 +28,11 @@ class Company(Base):
     low_52_weeks = Column(Float)
     low_52_weeks_date = Column(DateTime)
     meta = relationship('CompanyMeta', back_populates="company")
-    dividend = relationship('CompanyDividend', back_populates="company")
+    dividend = relationship(
+        'CompanyDividend',
+        back_populates="company",
+        order_by="desc(CompanyDividend.eff_date)",
+        primaryjoin="Company.id==CompanyDividend.company_id")
 
     __table_args__ = (
         UniqueConstraint('symbol', 'exchange', name='uix_1'),
@@ -120,7 +124,7 @@ class CompanyDividend(Base):
     __tablename__ = 'companies_dividend'
 
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
-    eff_date = Column(DateTime)
+    eff_date = Column(DateTime)                         # This is sometimes reffered to as ex
     declaration_date = Column(DateTime)
     record_date = Column(DateTime)
     pay_date = Column(DateTime)

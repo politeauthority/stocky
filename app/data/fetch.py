@@ -26,9 +26,10 @@ from bs4 import BeautifulSoup
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
-from app.models.company import Company, CompanyMeta
+from app.models.company import Company, CompanyMeta, CompanyDividend
 from app.models.quote import Quote
 from app.helpers import misc_time
+from app.helpers import calculations
 
 from modules import google_quotes
 
@@ -122,16 +123,15 @@ def import_wiki_prices():
     companies = {}
     with open(phile, 'rb') as csvfile:
         spamreader = csv.DictReader(csvfile)
+        counter = 0
         for row in spamreader:
             if row['ticker'] not in companies:
-                company = Company().get_by_symbol(row['ticker'])
+                company = Company.query.filter(Company.symbol == row['ticker']).one()
                 companies[row['ticker']] = company
             else:
                 company = companies[row['ticker']]
             if not company:
                 app.logger.error('Skipping %s' % row['ticker'])
-                continue
-            if company.symbol == 'A':
                 continue
             q = Quote()
             q.company_id = company.id
@@ -141,9 +141,25 @@ def import_wiki_prices():
             q.high = row['adj_high']
             q.low = row['adj_low']
             q.volume = row['adj_volume']
-            q.save()
+            if float(row['ex-dividend']):
+                exists = CompanyDividend.query.filter(
+                    CompanyDividend == row['ex-dividend'],
+                    CompanyDividend.eff_date == q.date,
+                    CompanyDividend.company_id == company.id).all()
+                if exists:
+                    continue
+                dividend = CompanyDividend()
+                dividend.eff_date = q.date
+                dividend.price = row['ex-dividend']
+                dividend.company_id = company.id
+                dividend.save()
+                print row
+                print "divided son"
+                q.save()
+            calculations.company_flat_stats(company)
             company.save()
             app.logger.info('Saving %s <%s>: %s %s' % (company.name, company.symbol, q.date, q.close))
+            counter += 1
             # if float(row['ex-dividend']) > 0:
             #     exit()
 

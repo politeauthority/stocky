@@ -2,9 +2,10 @@
 
 """
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 from sqlalchemy.orm.exc import NoResultFound
 
+from app.collections import portfolios as pc
 from app.models.company import Company
 from app.models.quote import Quote
 
@@ -26,6 +27,9 @@ def index(symbol=None):
     except NoResultFound:
         return render_template('company/404.html'), 404
     d['quote_count'] = Quote.query.filter(Quote.company_id == company.id).count()
+    d['portfolios'] = None
+    if session.get('user_id'):
+        d['portfolios'] = pc.by_user_id(session['user_id'])
 
     # c_hit = CompanyMeta()
     # c_hit.key = 'web_hit'
