@@ -67,18 +67,17 @@
                             <li class="sidebar-search">
                                 <form action="/search" method="POST">
                                     <div class="input-group custom-search-form">
-                                        <input type="text" class="form-control" placeholder="Search...">
-                                        <span class="input-group-btn">
+                                        <input type="text" class="form-control" name="search" placeholder="Search...">
+<!--                                         <span class="input-group-btn">
                                         <input type="button" class="fa fa-search">
-                                        <button class="btn btn-default" type="button">
+                                        <u class="btn btn-default" type="button">
                                             <i class="fa fa-search"></i>
-                                        </button>
-                                        </span>
+                                        </span> -->
                                     </div>
                                 </form>
                                 <!-- /input-group -->
                             </li>
-                            <li>
+                            <li>ss
                                 <a href="/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                             </li>
                             <li>
@@ -138,7 +137,16 @@
             <script src="/static/dev/js/sb-admin-2.min.js"></script>
 
             {%block javascript%}{%endblock%}
+            {%if config.DEBUG%}
+                <!-- Global Site Tag (gtag.js) - Google Analytics -->
+                <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107741296-1"></script>
+                <script>
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
 
-        </div>
+                  gtag('config', 'UA-107741296-1');
+                </script>
+            {%endif%}
     </body>
 </html>
