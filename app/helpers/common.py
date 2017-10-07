@@ -2,6 +2,7 @@
 
 """
 
+import os
 from datetime import datetime
 import holidays
 
@@ -56,5 +57,14 @@ def get_percentage(partial, total, rounding=3):
     partial = float(partial)
     total = float(total)
     return round(partial * 100 / total, rounding)
+
+
+def get_db_zip_size():
+    file_path = '/opt/stocky/app/static/data/stocky_data.zip'
+    if os.path.exists(file_path):
+        return os.path.getsize(file_path)
+    else:
+        return 0
+
 
 # End File stocky/app/helpers/common.py
