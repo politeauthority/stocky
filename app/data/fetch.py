@@ -22,6 +22,7 @@ import csv
 import requests
 from yahoo_finance import Share
 from bs4 import BeautifulSoup
+from sqlalchemy.orm.exc import NoResultFound
 
 sys.path.append("../..")
 from app import app
@@ -126,7 +127,11 @@ def import_wiki_prices():
         counter = 0
         for row in spamreader:
             if row['ticker'] not in companies:
-                company = Company.query.filter(Company.symbol == row['ticker']).one()
+                try:
+                    company = Company.query.filter(Company.symbol == row['ticker']).one()
+                except NoResultFound:
+                    app.logger.error('Could not find company %s' % row['ticker'])
+                    continue
                 companies[row['ticker']] = company
             else:
                 company = companies[row['ticker']]
