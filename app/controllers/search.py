@@ -1,14 +1,14 @@
 """Search - Controller
 
 """
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 
 from app.models.company import Company
 
 search = Blueprint('Search', __name__, url_prefix='/search')
 
 
-@search.route('')
+@search.route('', methods=['GET', 'POST'])
 def index():
     """
     Search Home
@@ -16,18 +16,21 @@ def index():
     :param symbol: stock symbol
     :type symbol: str
     """
-    industry_seach = False
-    if request.args.get('industry'):
-        industry_seach = request.args.get('industry')
-
-    query_filters = []
-    if industry_seach:
-        query_filters.append(Company.industry == industry_seach)
-
-    search_results = Company.query.filter(Company.industry == industry_seach).all()
+    search_phrase = request.form['search']
+    industry_phrase = request.form['industry']
+    companies_seach = Company.query.filter(Company.symbol.like("%" + search_phrase + "%"))\
+        .order_by(Company.ts_updated).all()
+    companies_seach += Company.query.filter(Company.name.like("%" + search_phrase + "%"))\
+        .order_by(Company.ts_updated).all()
+    companies_seach = Company.query.filter(Company.industry.like("%" + industry_phrase + "%"))\
+        .order_by(Company.ts_updated).all()
+    if len(companies_seach) == 1:
+        return redirect('/company/%s' % companies_seach[0].symbol)
     d = {
-        'search_results': search_results
+        'companies': companies_seach,
+        'search_term': request.form['search']
     }
+    # companies_seach = Company.query.filter(Company.symbol == request.form['search']).all()
     return render_template('search/results.html', **d)
 
 

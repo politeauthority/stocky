@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+{%block title%}About{%endblock%}
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Stock Database Includes</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    If you were lucky enough to grab the most recent export of stock data (just a zip download away), which includes, at the moment, NASDAQ and NYSE,
+                    going back to roughly ~1980. You might want a document telling you exactly what it is you have. Ideally, this might
+                    be just that.
+                    <ul>
+                        <li><h3>Companies (companies)</h3></li>
+                        <p class="small"><a href="https://github.com/politeauthority/stocky/blob/master/app/models/company.py">https://github.com/politeauthority/stocky/blob/master/app/models/company.py</a></p>
+                        <ul>
+                            <li><b>symbol</b> = Column( String( 10 ), nullable = False )</li>
+                            <li><b>name</b> = Column(String(128), nullable=False)</li>
+                            <li><b>price</b> = Column(Float)</li>
+                            <li><b>market_cap</b> = Column(Float)</li>
+                            <li><b>ipo_date</b> = Column(DateTime)</li>
+                            <li><b>sector</b> = Column(String(128))</li>
+                            <li><b>industry</b> = Column(String(128))</li>
+                            <li><b>exchange</b> = Column(String(128))</li>
+                            <li><b>high_52_weeks</b> = Column(Float)</li>
+                            <li><b>high_52_weeks_date</b> = Column(DateTime)</li>
+                            <li><b>low_52_weeks</b> = Column(Float)</li>
+                            <li><b>low_52_weeks_date</b> = Column(DateTime)</li>
+                            <li><b>meta =</b> relationship('CompanyMeta', back_populates="company")</li>
+                            <li><b>dividend</b> = relationship('CompanyDividend', back_populates="company")</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li><h3>Companies Meta (companies_meta)</h3></li>
+                        <p class="small"><a href="https://github.com/politeauthority/stocky/blob/master/app/models/company.py">https://github.com/politeauthority/stocky/blob/master/app/models/company.py</a></p>
+                        <p class="small">Note this table and it's usage are in beta in the current system right now.</p>
+                        <ul>
+                            <li><b>company_id</b> = Column(Integer, ForeignKey("companies.id"), nullable=False)</li>
+                            <li><b>key =</b> Column(String(256), nullable=False)</li>
+                            <li><b>val_type</b> = Column(String(256))</li>
+                            <li><b>val_string</b> = Column(Text())</li>
+                            <li><b>val_pickle</b> = Column(PickleType())</li>
+                            <li><b>val_int</b> = Column(Integer)</li>
+                            <li><b>val_date</b> = Column(DateTime)</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li><h3>Companies Dividend (companies_dividend)</h3></li>
+                        <p class="small"><a href="https://github.com/politeauthority/stocky/blob/master/app/models/company.py"> https://github.com/politeauthority/stocky/blob/master/app/models/company.py</a></p>
+                        <p class="small">Note this table is still being built and filled with data, it may change.</p>
+                        <ul>  
+                            <li><b>company_id</b> = Column(Integer, ForeignKey("companies.id"), nullable=False)</li>
+                            <li><b>eff_date</b> = Column(DateTime)</li>
+                            <li><b>declaration_date</b> = Column(DateTime)</li>
+                            <li><b>record_date</b> = Column(DateTime)</li>
+                            <li><b>pay_date</b> = Column(DateTime)</li>
+                            <li><b>price</b> = Column(Float, nullable=False)</li>
+                            <li><b>company</b> = relationship("Company", back_populates="dividend")</li>
+                        </ul>
+                    </ul>
+                    <br />
+                    <ul>
+                        <li><h3>Quotes (quotes)</h3></li>
+                        <p class="small"><b>Model Source: </b><a target="_new"  href="https://github.com/politeauthority/stocky/blob/master/app/models/quote.py">https://github.com/politeauthority/stocky/blob/master/app/models/quote.py</a></p>
+                        <ul>  
+                            <li><b>id</b> = Column( Integer, primary_key = True)</li>
+                            <li><b>ts_created</b> = Column(DateTime, default = func.current_timestamp())</li>
+                            <li><b>ts_updated</b> = Column(DateTime, default = func.current_timestamp(), onupdate=func.current_timestamp())</li>
+                            <li><b>company</b>_id = Column(Integer, ForeignKey("companies.id"), nullable= F alse)</li>
+                            <li><b>date</b> = Column(DateTime, nullable = False )</li>
+                            <li><b>close</b> = Column( Float, nullable = False )</li>
+                            <li><b>open</b> = Column( Float )</li>
+                            <li><b>high</b> = Column( Float )</li>
+                            <li><b>low</b> = Column( Float )</li>
+                            <li><b>volume</b> = Column( Float )</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li><h3>Portfolio (portfolios)</h3></li>
+                        <p class="danger">This table can include sensative data, so the export will only include structure! No info :(</p>
+                        <p class="small"><b>Model Source: </b>. <a target="_new" href="https://github.com/politeauthority/stocky/blob/master/app/models/portfolio.py">https://github.com/politeauthority/stocky/blob/master/app/models/portfolio.py</a></p>
+                        <ul>  
+                            <li><b>user_id</b> = Column(Integer, nullable=False)</li>
+                            <li><b>name</b> = Column(String(20), nullable=False)</li>
+                            <li><b>cash</b> = Column(Integer)</li>
+                            <li><b>priority</b> = Column(Integer)</li>
+                            <li><b>events</b> = relationship(</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li><h3>Portfolio (portfolio)</h3></li>
+                        <p class="danger">This table can include sensative data, so the export will only include structure! No info :(</p>
+                        <p class="small"><b>Model Source: </b>. <a target="_new" href="https://github.com/politeauthority/stocky/blob/master/app/models/portfolio.py">https://github.com/politeauthority/stocky/blob/master/app/models/portfolio.py</a></p>
+                        <ul>  
+                            <li><b>user_id</b> = Column(Integer, nullable=False)</li>
+                            <li><b>name</b> = Column(String(20), nullable=False)</li>
+                            <li><b>cash</b> = Column(Integer)</li>
+                            <li><b>priority</b> = Column(Integer)</li>
+                            <li><b>events</b> = relationship(</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li><h3>PortfolioEvents (portfolios_events)</h3></li>
+                        <p class="danger">This table can include sensative data, so the export will only include structure! No info :(</p>
+                        <p class="small"><b>Model Source: </b>. <a target="_new" href="https://github.com/politeauthority/stocky/blob/master/app/models/portfolio.py">https://github.com/politeauthority/stocky/blob/master/app/models/portfolio.py</a></p>
+                        <ul>  
+                            <li><b>portfolio_id</b> = Column(Integer, ForeignKey("portfolios.id"), nullable=False)</li>
+                            <li><b>company_id</b> = Column(Integer, ForeignKey("companies.id"), nullable=False)</li>
+                            <li><b>price</b> = Column(Float, nullable=False)</li>
+                            <li><b>count</b> = Column(Integer, nullable=False)</li>
+                            <li><b>date</b> = Column(DateTime, nullable=False)</li>
+                            <li><b>type</b> = Column(String(10), nullable=False)</li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <a href="https://bad-at.life/static/data/stocky_data.zip">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-download fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"></div>
+                                <div><h2>~17 Mb</h2></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="row">
+        <a href="https://www.github.com/politeauthority/stocky/" target="_blank">
+            <div class="offset-8 col-lg-4 col-md-6 col-sm-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-github fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"></div>
+                                <div>
+                                    <h2>Contribute!</h2>
+                                    <p>
+                                        We're on github!<br>
+                                        Send us a pull request
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{%endblock%}
+

@@ -1,17 +1,75 @@
 {% extends "layout.html" %}
-{%block title%}Stocky{%endblock%}
+{%block title%}Dashboard | Stocky{%endblock%}
 {% block content %}
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Stocky</h1>
+            <h1 class="page-header">Dashboard</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-building fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{data_stats['total_companies']|fmt_int}}</div>
+                            <div>Tracked Companies</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-database fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{data_stats['total_quotes']|fmt_int}}</div>
+                            <div>Tracked Quotes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-dollar fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{data_stats['total_dividends']|fmt_int}}</div>
+                            <div>Tracked Dividends</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel panel-default">
+            <div class="panel">
+                <div class="panel-heading">
+                    Bad At Life
+                </div>
+                <div class="panel panel-default">
+                    <h3>Bad-at.life</h3>
+                    Is a flegling an opensource stock trading resource for those who cant afford, or dont want to pay for bullshit tools to sift through real stock data.
+                    If you think you can do better, please download my data and take any of my source code, and make things better for the world. Or, help out with bad at
+                    life, check out the <a href="/about">about</a> page, for just a little bit more info.
 
+                </div>
             </div>
         </div>
     </div>

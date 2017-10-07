@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{%block title%}Watch List{%endblock%}
+{%block title%}About{%endblock%}
 {% block content %}
 <div id="page-wrapper">
     <div class="row">
@@ -12,10 +12,55 @@
         <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <p>This is an open source project, headed by a data heavy minded developer interested in the stock market.
-                    So if you were wondering why the UI needs some help, now ya know.</p>
-                    <p>To follow the project check out the github repo at <a href="http://www.github.com/politeauthority/stocky/">http://www.github.com/politeauthority/stocky/</a></p>
-                    <p>If you're just looking for stock data information, you can grab an up to date SQL dump of all the stock data the system currently tracks at <a href="https://bad-at.life/static/data/stocky_data.zip">https://bad-at.life/static/data/stocky_data.zip</a></p>
+                    <h2>A Short Creed, So You Know Waht You're Lookin At</h2>
+                    <p>
+                        This is an <a href="https://www.github.com/politeauthority/stocky">open source project</a>, 
+                        headed by a data heavy minded developer, who is interested in the stock market data. What I've relatively
+                        found is it's a tonnnnn of work to find recent, but most especially historical finacial stock data. That 
+                        bummed me out. So I found a couple of APIs/ Data dumps willing to share the info, but none the less, even after
+                        find all the data I needed; I really didn't want to see anyone else go through the trouble.</p>
+                    <p>
+                        If this project acomplishes anything, it will be that some smarter guys then me take the data, and make it useful,
+                        of course, giving <i class="fa fa-user fa-fw"></i><a href="https://github.com/politeauthority"> me</a> some stock tips 
+                        along the way!</p>
+                    <br>
+                    <h2>But I'm a wizard and I'm going to scrape your site</h2>
+                    <p><b>TLDR</b> Just download the MYSQL dump, its well organized and wont crash my site.</p>
+                    <p> You absolutely could! I'm even running a supper limited REST API right now that you could find and use. But I've 
+                        thought about that. I could go to great lenghts to try and stop your project from not stealing my content,
+                        and loose tons of sleep over how to horde this data. However that just seems dumb and unfair, (after all it's stock,
+                        data not my cool OC). So my hope is <b><font style="font-size: : 18px;">before</h3></b> you scrape this site and take my fragile servers down, you just 
+                        grab the data dump to the left. It is a zip file of all my tables that do not contain user data. The current structure of
+                        these tables is <a href="/data-structure">availble here</a>. If you dont like the structure or think I'm missing 
+                        things, let me know!. <b>Typically the data is ~24 hours away from the most recent close.</b>Basically, if this site has the content
+                        the MYSQL dump does too.</p>
+
+                    <p>P.S. If you were wondering why the UI needs some help, I'm a data guy.. sorry.. not sorry.. actually I am sorry.</p>
+                    <p>If you are a python developer, a UI/UX person, finance math wiz or a data guy and you have interest in making 
+                        world class free stock trading tools, please join up! We can use all the help we can get!</p>
+                    <p>To follow the project check out the github repo at 
+                        <a href="http://www.gtithub.com/politeauthority/stocky/">http://www.github.com/politeauthority/stocky/</a></p>
+                    <h4>Just the Damn Data Already</h4>
+                    <p>If you're just looking for stock data information, you can grab an up to date MYSQL dump of all the stock 
+                        data the system currently tracks at 
+                        <a href="https://bad-at.life/static/data/stocky_data.zip">https://bad-at.life/static/data/stocky_data.zip</a>
+                        The tables should be pretty straight foreward, but using the code from github will give you a complete SQL Alchemey
+                        ORM, which is pretty fucking cool IMHO.
+                    </p>
+                    <h4>But your website sucks, whats up with that?</h4>
+                    <p>If some website get's built around it cool, but the primary goal is to build reliable, compressed data sets.
+                        If some developer finds the data useful, thats most awesome!
+                        I could, and probably will at some piont launch into a manifesto about how all non-personal data should
+                        be free, letting the peasents (like myself) a chance at understanding financial markets, without a 
+                        bunch of dollars getting in the way. But for now, I'm really trying to drop politics and just share some data.
+                    </p>
+                    <h4>LOL EULA</h4>
+                    <p>
+                        At some point I'll need to make a real disclaimer, but as of right now, and for the life of this 
+                        project, as I own/oversee/host it, we will never use your personal data, aside from crunching numbers,
+                        and giving you cool stats back. I have no interest in selling this data. I really just want cool, up to date tools,
+                    to do kick ass shit with. (RIP Yahoo Finance)</p>
+
                 </div>
             </div>
         </div>

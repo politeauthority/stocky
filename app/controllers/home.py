@@ -13,11 +13,28 @@ home = Blueprint('Home', __name__, url_prefix='/')
 
 
 @home.route('')
-@home.route('dashboard')
 def index():
     """
     Index
-    Nothing really here yet.
+
+    """
+    d = {}
+    d['data_stats'] = {
+        'total_companies': Company.query.count(),
+        'total_quotes': Quote.query.count(),
+        'total_dividends': CompanyDividend.query.count(),
+        'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
+    }
+    return render_template('home/index.html', **d)
+
+
+@home.route('dashboard')
+def dashboard():
+    """
+    Dashboard
+    Displays some statictics about the site, we'll probably hide these eventually
+
+    @note: This methods basically just the index right now.
 
     """
     d = {}
@@ -28,17 +45,6 @@ def index():
         'recent_companies': Company.query.filter().order_by(Company.ts_updated.desc()).limit(10).all()
     }
     return render_template('home/dashboard.html', **d)
-
-
-def dashboard():
-    """
-    Dashboard
-    Displays some statictics about the site, we'll probably hide these eventually
-
-    @note: This methods basically just the index right now.
-
-    """
-    return None
 
 
 @home.route('recent')
@@ -74,5 +80,13 @@ def about():
 
     """
     return render_template('home/about.html')
+
+@home.route('data-structure')
+def data_structure():
+    """
+    Static data structure page.
+
+    """
+    return render_template('home/data_structure.html')
 
 # End File: stocky/app/controllers/home.py
