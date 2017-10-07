@@ -2,6 +2,7 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect
 
 """
+from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template
 
@@ -61,6 +62,24 @@ def recently_updated():
     return render_template('home/recent.html', **d)
 
 
+@home.route('dividends')
+def dividends():
+    """
+    Get upcomming and recently passed dividends
+
+    """
+    # prelimiary_filter = CompanyDividend.eff_date >= (datetime.now() - timedelta(days=5))
+    dividends = CompanyDividend.query.filter().order_by(CompanyDividend.eff_date.desc()).limit(50).all()
+    companies = {}
+    for divy in dividends:
+        if divy.company_id not in companies:
+            companies[divy.company_id] = Company.query.filter(Company.id == divy.company_id).one()
+    d = {}
+    d['companies'] = companies
+    d['dividends'] = dividends
+    return render_template('home/dividends.html', **d)
+
+
 @home.route('watchlist')
 def watchlist():
     """
@@ -80,6 +99,7 @@ def about():
 
     """
     return render_template('home/about.html')
+
 
 @home.route('data-structure')
 def data_structure():

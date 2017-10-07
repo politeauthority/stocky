@@ -195,6 +195,11 @@
 
                         </a>
                         <a href="#" class="list-group-item">
+                            <i class="fa fa-newspaper-o fa-fw"></i> Dividends
+                            <span class="pull-right text-muted"><strong>{{company.dividend|length}}</strong></span>
+
+                        </a>
+                        <a href="#" class="list-group-item">
                             <i class="fa fa-comment fa-fw"></i> Last updated
                             <span class="pull-right text-muted"><strong>{{company.ts_updated|time_ago}}</strong></span>
 
@@ -268,39 +273,41 @@
         </div>
         <!-- /.col-lg-8 -->
 
-        <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Dividend History
+        {%if company.dividend%}
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Dividend History
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Date</th>
+                                <th>Price</th>
+                            </thead>
+                            <tbody>
+                                {%for dividend in company.dividend%}
+                                    <tr>
+                                        <td>
+                                            {%if dividend.pay_date%}
+                                                {{dividend.pay_date|fmt_date}}
+                                            {%elif dividend.eff_date%}
+                                                {{dividend.eff_date|fmt_date('%m-%d-%Y')}}
+                                            {%endif%}
+                                        </td>
+                                        <td>{{dividend.price|fmt_currency}}</td>
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                        <div id="morris-donut-chart"></div>
+                    </div>
+                    <!-- /.panel-body -->
                 </div>
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <th>Date</th>
-                            <th>Price</th>
-                        </thead>
-                        <tbody>
-                            {%for dividend in company.dividend%}
-                                <tr>
-                                    <td>
-                                        {%if dividend.pay_date%}
-                                            {{dividend.pay_date|fmt_date}}
-                                        {%elif dividend.eff_date%}
-                                            {{dividend.eff_date|fmt_date('%m-%d-%Y')}}
-                                        {%endif%}
-                                    </td>
-                                    <td>{{dividend.price|fmt_currency}}</td>
-                                </tr>
-                            {%endfor%}
-                        </tbody>
-                    </table>
-                    <div id="morris-donut-chart"></div>
-                </div>
-                <!-- /.panel-body -->
+                <!-- /.panel -->
             </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-4 -->
+            <!-- /.col-lg-4 -->
+        {%endif%}
 
     </div>
     <!-- /.row -->
