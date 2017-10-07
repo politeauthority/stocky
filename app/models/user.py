@@ -56,4 +56,24 @@ class UserMeta(Base):
     def __repr__(self):
         return '<UserMeta %s, %s>' % (self.key, self.id)
 
+
+class UserLogin(Base):
+
+    __tablename__ = 'users_logins'
+
+    user_id = Column(String(256), nullable=False)
+    ip = Column(String(256))
+
+    def __init__(self, _id=None):
+        if _id:
+            self.id = _id
+
+    def __repr__(self):
+        return '<User %r, %r>' % (self.id, self.user_id)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 # End File: stocky/app/models/user.py

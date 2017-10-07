@@ -5,7 +5,7 @@ from flask import Blueprint, request, render_template, flash, g, session, redire
 
 from flask import Blueprint, render_template, request, redirect, session
 
-from app.models.user import User
+from app.models.user import User, UserLogin
 
 auth = Blueprint('Auth', __name__, url_prefix='/auth')
 
@@ -34,6 +34,10 @@ def login():
     session['authenticated'] = True
     session['user_id'] = user.id
     session['user_level'] = 'admin'
+    login = UserLogin()
+    login.user_id = session['user_id']
+    login.ip = request.remote_addr
+    login.save()
     return redirect('/dashboard')
 
 
