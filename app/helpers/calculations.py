@@ -2,6 +2,7 @@
 """
 import sys
 from datetime import datetime, timedelta
+from sqlalchemy.orm.exc import NoResultFound
 
 sys.path.append("../..")
 # from app import app
@@ -18,7 +19,10 @@ def company_flat_stats(company):
     """
 
     # Get the last quote
-    last_quote = Quote.query.filter(Quote.company_id == company.id).order_by(Quote.date.desc()).limit(1).one()
+    try:
+        last_quote = Quote.query.filter(Quote.company_id == company.id).order_by(Quote.date.desc()).limit(1).one()
+    except NoResultFound:
+        return
     company.price = last_quote.close
 
     # Get the lows
@@ -33,6 +37,6 @@ def company_flat_stats(company):
     company.high_52_weeks_date = high_52_week.date
     company.ts_updated = datetime.now()
     company.save()
-
+    return
 
 # End File: stocky/app/data/calculate.py

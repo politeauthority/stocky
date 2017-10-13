@@ -34,12 +34,12 @@ def by_portfolio(portfolio_id):
     totals = {
         'profit': 0,
     }
-    companies = {}
+    companies = []
 
     for e in user_portfolio.events:
         local_company_id = e.company_id
-        # if e.company_id not in companies:
-            # companies[local_companh_id] = Company(local_companh_id)
+        if local_company_id not in companies:
+            companies.append(local_company_id)
 
         if e.company_id not in positions:
             positions[e.company_id] = {}
