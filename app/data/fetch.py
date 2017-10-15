@@ -209,6 +209,7 @@ if __name__ == "__main__":
     elif args['--test']:
         test()
     elif args['--wiki_prices']:
+        print 'running wiki prices'
         import_wiki_prices()
 
 
