@@ -3,7 +3,6 @@
 """
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import backref
 
 from app.models.base import Base
 

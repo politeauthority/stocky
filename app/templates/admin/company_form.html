@@ -1,0 +1,245 @@
+{% extends "layout.html" %}
+{%block title%}Portfolio{%endblock%}
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{%if edit%}Edit{%else%}Add{%endif%} Company</h1>
+        </div>
+    </div>
+
+    {%if edit%}
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="/company/{{company.symbol}}"><< {{company.name}}</a>
+        </div>
+    </div>
+    {%endif%}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <form role="form" action="/admin/company/save" method="POST" lpformnum="1" _lpchecked="1">
+                    {%if edit%}
+                        <input type="hidden" name="company_id" value="{{company.id}}">
+                    {%endif%}
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input name="company_name" {%if edit%} value="{{company.name}}"{%endif%} class="form-control">
+                        <p class="help-block">The company or ETF traded.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Symbol</label>
+                        <input name="company_symbol" {%if edit%} value="{{company.symbol}}"{%endif%} class="form-control">
+                        <p class="help-block">The company or symbol traded.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Exchange</label>
+                        <select name="company_exchange" class="form-control">
+                            {%if edit%}
+                                <option value="{{company.exchange}}">{{company.exchange}}</option>
+                            {%endif%}
+                            <option value="nasdaq">NasDaq</option>
+                            <option value="nyse">NYSE</option>
+                        </select>
+                        <p class="help-block">The company exchange.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input name="company_price" {%if edit%} value="{{company.price}}"{%endif%} class="form-control">
+                        <p class="help-block">The last traded price for the company.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Market Cap</label>
+                        <input name="company_mktcap" {%if edit%} value="{{company.market_cap}}"{%endif%} class="form-control">
+                        <p class="help-block">The company market cap.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>IPO Date</label>
+                        <input name="company_ipo_date" {%if edit and company.ipo_date%} value="{{company.ipo_date}}"{%endif%} class="form-control">
+                        <p class="help-block">The company's initial public offering date.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Sector</label>
+                        <select name="company_sector" class="form-control">
+                            {%if edit%}
+                                <option selected="selected" value="{{company.sector}}">{{company.sector}}</option>
+                            {%else%}
+                                <option selected="selected" value=""></option>
+                            {%endif%}
+                            <option>Basic Industries</option>
+                            <option>Capital Goods</option>
+                            <option>Consumer Durables</option>
+                            <option>Consumer Non-Durables</option>
+                            <option>Consumer Services</option>
+                            <option>Energy</option>
+                            <option>Finance</option>
+                            <option>Health Care</option>
+                            <option>Miscellaneous</option>
+                            <option>Public Utilities</option>
+                            <option>Technology</option>
+                            <option>Transportation</option>
+                        </select>
+                        <p class="help-block">The company sector.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Industry</label>
+                        <select name="company_industry" class="form-control">
+                            {%if edit%}
+                                <option selected="selected" value="{{company.industry}}">{{company.industry}}</option>
+                            {%else%}
+                                <option selected="selected" value=""></option>
+                            {%endif%}
+                            <option>Accident & Health Insurance</option>
+                            <option>Advertising</option>
+                            <option>Aerospace</option>
+                            <option>Agricultural Chemicals</option>
+                            <option>Air Freight/Delivery Services</option>
+                            <option>Aluminum</option>
+                            <option>Apparel</option>
+                            <option>Auto Manufacturing</option>
+                            <option>Auto Parts:O.E.M.</option>
+                            <option>Automotive Aftermarket</option>
+                            <option>Banks</option>
+                            <option>Beverages (Production/Distribution)</option>
+                            <option>Biotechnology: Biological Products (No Diagnostic Substances)</option>
+                            <option>Biotechnology: Commercial Physical & Biological Resarch</option>
+                            <option>Biotechnology: Electromedical & Electrotherapeutic Apparatus</option>
+                            <option>Biotechnology: In Vitro & In Vivo Diagnostic Substances</option>
+                            <option>Biotechnology: Laboratory Analytical Instruments</option>
+                            <option>Books</option>
+                            <option>Broadcasting</option>
+                            <option>Building Materials</option>
+                            <option>Building operators</option>
+                            <option>Building Products</option>
+                            <option>Business Services</option>
+                            <option>Catalog/Specialty Distribution</option>
+                            <option>Clothing/Shoe/Accessory Stores</option>
+                            <option>Coal Mining</option>
+                            <option>Commercial Banks</option>
+                            <option>Computer Communications Equipment</option>
+                            <option>Computer Manufacturing</option>
+                            <option>Computer peripheral equipment</option>
+                            <option>Computer Software: Prepackaged Software</option>
+                            <option>Computer Software: Programming, Data Processing</option>
+                            <option>Construction/Ag Equipment/Trucks</option>
+                            <option>Consumer Electronics/Appliances</option>
+                            <option>Consumer Electronics/Video Chains</option>
+                            <option>Consumer Specialties</option>
+                            <option>Consumer: Greeting Cards</option>
+                            <option>Containers/Packaging</option>
+                            <option>Department/Specialty Retail Stores</option>
+                            <option>Diversified Commercial Services</option>
+                            <option>Diversified Electronic Products</option>
+                            <option>Diversified Financial Services</option>
+                            <option>EDP Services</option>
+                            <option>Electric Utilities: Central</option>
+                            <option>Electrical Products</option>
+                            <option>Electronic Components</option>
+                            <option>Electronics Distribution</option>
+                            <option>Engineering & Construction</option>
+                            <option>Environmental Services</option>
+                            <option>Farming/Seeds/Milling</option>
+                            <option>Finance Companies</option>
+                            <option>Finance/Investors Services</option>
+                            <option>Finance: Consumer Services</option>
+                            <option>Fluid Controls</option>
+                            <option>Food Chains</option>
+                            <option>Food Distributors</option>
+                            <option>Forest Products</option>
+                            <option>General Bldg Contractors - Nonresidential Bldgs</option>
+                            <option>Home Furnishings</option>
+                            <option>Homebuilding</option>
+                            <option>Hospital/Nursing Management</option>
+                            <option>Hotels/Resorts</option>
+                            <option>Industrial Machinery/Components</option>
+                            <option>Industrial Specialties</option>
+                            <option>Integrated oil Companies</option>
+                            <option>Investment Bankers/Brokers/Service</option>
+                            <option>Investment Managers</option>
+                            <option>Life Insurance</option>
+                            <option>Major Banks</option>
+                            <option>Major Chemicals</option>
+                            <option>Major Pharmaceuticals</option>
+                            <option>Marine Transportation</option>
+                            <option>Meat/Poultry/Fish</option>
+                            <option>Medical Electronics</option>
+                            <option>Medical Specialities</option>
+                            <option>Medical/Dental Instruments</option>
+                            <option>Medical/Nursing Services</option>
+                            <option>Metal Fabrications</option>
+                            <option>Military/Government/Technical</option>
+                            <option>Mining & Quarrying of Nonmetallic Minerals (No Fuels)</option>
+                            <option>Miscellaneous</option>
+                            <option>Miscellaneous manufacturing industries</option>
+                            <option>Motor Vehicles</option>
+                            <option>Movies/Entertainment</option>
+                            <option>Multi-Sector Companies</option>
+                            <option>Natural Gas Distribution</option>
+                            <option>Newspapers/Magazines</option>
+                            <option>Office Equipment/Supplies/Services</option>
+                            <option>Oil & Gas Production</option>
+                            <option>Oil Refining/Marketing</option>
+                            <option>Oil/Gas Transmission</option>
+                            <option>Oilfield Services/Equipment</option>
+                            <option>Ophthalmic Goods</option>
+                            <option>Ordnance And Accessories</option>
+                            <option>Other Consumer Services</option>
+                            <option>Other Pharmaceuticals</option>
+                            <option>Other Specialty Stores</option>
+                            <option>Other Transportation</option>
+                            <option>Package Goods/Cosmetics</option>
+                            <option>Packaged Foods</option>
+                            <option>Paints/Coatings</option>
+                            <option>Paper</option>
+                            <option>Plastic Products</option>
+                            <option>Pollution Control Equipment</option>
+                            <option>Power Generation</option>
+                            <option>Precious Metals</option>
+                            <option>Precision Instruments</option>
+                            <option>Professional Services</option>
+                            <option>Property-Casualty Insurers</option>
+                            <option>Publishing</option>
+                            <option>Radio And Television Broadcasting And Communications Equipment</option>
+                            <option>Railroads</option>
+                            <option>Real Estate</option>
+                            <option>Real Estate Investment Trusts</option>
+                            <option>Recreational Products/Toys</option>
+                            <option>Rental/Leasing Companies</option>
+                            <option>Restaurants</option>
+                            <option>RETAIL: Building Materials</option>
+                            <option>Retail: Computer Software & Peripheral Equipment</option>
+                            <option>Savings Institutions</option>
+                            <option>Semiconductors</option>
+                            <option>Services-Misc. Amusement & Recreation</option>
+                            <option>Shoe Manufacturing</option>
+                            <option>Specialty Chemicals</option>
+                            <option>Specialty Foods</option>
+                            <option>Specialty Insurers</option>
+                            <option>Steel/Iron Ore</option>
+                            <option>Telecommunications Equipment</option>
+                            <option>Television Services</option>
+                            <option>Textiles</option>
+                            <option>Tobacco</option>
+                            <option>Tools/Hardware</option>
+                            <option>Transportation Services</option>
+                            <option>Trucking Freight/Courier Services</option>
+                            <option>Water Supply</option>
+                            <option>Wholesale Distributors</option>
+                        </select>
+                        <p class="help-block">The company industry.</p>
+                    </div>
+                    {%if edit%}
+                        <a href="/company_id/delete/" class="btn btn-default btn-danger">Delete</a>
+                    {%else%}
+                        <button type="reset" class="btn btn-default btn-danger">Reset</button>
+                    {%endif%}
+                    <button type="submit" class="btn btn-default btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+

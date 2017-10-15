@@ -3,6 +3,7 @@ Main file for the entire flask app.
 
 """
 import os
+from urllib import quote_plus
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
@@ -67,6 +68,7 @@ def register_jinja_funcs(app):
     app.jinja_env.filters['fmt_currency'] = jinja_filters.format_currency
     app.jinja_env.filters['fmt_int'] = jinja_filters.fmt_int
     app.jinja_env.filters['percentage'] = common.get_percentage
+    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u)
 
 
 def register_blueprints(app):

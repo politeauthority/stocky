@@ -19,12 +19,10 @@ def index():
     search_phrase = None
     if 'search' in request.form:
         search_phrase = request.form['search']
-    industry_phrase = None
-    if 'industry' in request.args:
-        industry_phrase = request.args['industry']
+
     # return str()
     companies_seach = []
-    if search:
+    if search_phrase:
         companies_seach = Company.query.filter(Company.symbol.like("%" + search_phrase + "%"))\
             .order_by(Company.ts_updated).all()
         # If we match on a symbol and have only one result, redirect to that page.
@@ -32,8 +30,8 @@ def index():
             redirect('/company/%s' % companies_seach[0].symbol)
         companies_seach += Company.query.filter(Company.name.like("%" + search_phrase + "%"))\
             .order_by(Company.ts_updated).all()
-    if industry_phrase:
-        companies_seach += Company.query.filter(Company.industry.like("%" + industry_phrase + "%"))\
+    if request.args.get('industry'):
+        companies_seach += Company.query.filter(Company.industry.like("%" + request.args.get('industry') + "%"))\
             .order_by(Company.ts_updated).all()
     if len(companies_seach) == 1:
         return redirect('/company/%s' % companies_seach[0].symbol)

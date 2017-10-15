@@ -1,7 +1,7 @@
 """Quote - Models
 
 """
-from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey, func, UniqueConstraint
+from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey, func, UniqueConstraint, Index
 
 from app import db
 from app.models.base import Base
@@ -21,6 +21,8 @@ class Quote(Base):
     high = Column(Float)
     low = Column(Float)
     volume = Column(Float)
+
+    index_symbol = Index('symbol_idx', date)
 
     __table_args__ = (
         UniqueConstraint('company_id', 'date', name='uix_1'),

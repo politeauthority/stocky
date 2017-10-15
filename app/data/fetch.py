@@ -121,6 +121,7 @@ def import_wiki_prices():
 
     """
     phile = os.path.join(download_path, 'WIKI_PRICES_212b326a081eacca455e13140d7bb9db.csv')
+    print phile
     companies = {}
     with open(phile, 'rb') as csvfile:
         spamreader = csv.DictReader(csvfile)
@@ -160,7 +161,7 @@ def import_wiki_prices():
                 dividend.save()
                 print row
                 print "divided son"
-                q.save()
+            q.save()
             calculations.company_flat_stats(company)
             company.save()
             app.logger.info('Saving %s <%s>: %s %s' % (company.name, company.symbol, q.date, q.close))
@@ -170,18 +171,23 @@ def import_wiki_prices():
 
 
 def test():
+    print 'running the dumb test'
     companies = cc.by_symbols(['AAPL'])
+    print 'got companies'
     for company in companies:
-        print company.name
-        meta = CompanyMeta()
-        meta.company_id = company.id
-        meta.key = 'test_meta'
-        meta.val_type = 'str'
-        meta.value = 'something'
+        print company
+        calculations.run_all(company)
+    #     print company.name
+    #     meta = CompanyMeta()
+    #     meta.company_id = company.id
+    #     meta.key = 'test_meta'
+    #     meta.val_type = 'str'
+    #     meta.value = 'something'
 
-        print meta
-        meta.save()
-    print companies
+    #     print meta
+    #     meta.save()
+    # print companies
+
 
 if __name__ == "__main__":
     args = docopt(__doc__)

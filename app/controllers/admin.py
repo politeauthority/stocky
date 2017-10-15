@@ -3,36 +3,53 @@
 """
 
 from flask import Blueprint, render_template, request, redirect
+from sqlalchemy.orm.exc import NoResultFound
 
 from app.collections import companies as cc
 from app.models.company import Company, CompanyDividend
 from app.models.user import User
 from app.helpers.decorators import requires_auth
 
+
 admin = Blueprint('Admin', __name__, url_prefix='/admin')
 
 
 @admin.route('/company/form')
+@admin.route('/company/form/<company_id>')
 @requires_auth
-def form_company():
+def form_company(company_id=None):
     """
     Form to add a new company.
 
     """
-    return render_template('admin/add_company.html')
+    d = {}
+    if company_id:
+        try:
+            d['edit'] = True
+            company = Company.query.filter(Company.id == company_id).one()
+            d['company'] = company
+        except NoResultFound:
+            return render_template('company/404.html'), 404
+    return render_template('admin/company_form.html', **d)
 
 
-@admin.route('/company/add', methods=['POST'])
+@admin.route('/company/save', methods=['POST'])
 @requires_auth
-def add_company():
+def save_company():
     """
     Method to save new company.
 
     """
-    company = Company()
+    if request.form.get('company_id'):
+        company = Company.query.filter(Company.id == request.form.get('company_id')).one()
+    else:
+        company = Company()
     company.name = request.form['company_name']
     company.symbol = request.form['company_symbol']
     company.ipo_year = request.form['company_ipo_date']
+    company.exchange = request.form['company_exchange']
+    company.price = request.form['company_price']
+    company.ipo_date = request.form['company_ipo_date']
     company.sector = request.form['company_sector']
     company.industry = request.form['company_industry']
     company.save()

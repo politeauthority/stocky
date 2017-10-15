@@ -96,7 +96,7 @@
             <h1 class="page-header">{{company.symbol}}</h1>
             <h2>{{company.name}}</h2>
             {%if company.sector%}
-                <a href="/search?industry={{company.sector}}">
+                <a href="/search?industry={{company.sector|quote_plus}}">
                     <h3 class="text-muted">{{company.sector}}</h3>
                 </a>
             {%endif%}
@@ -108,6 +108,12 @@
             {%endif%}
         </div>
         <!-- /.col-lg-8-->
+
+        <div class="col-lg-4">
+            {%if 'user_level' in session and session['user_level'] == 'admin'%}
+                <a href="/admin/company/form/{{company.id}}"> <button class="btn btn-warning">Edit</button></a>
+            {%endif%}
+        </div>
     </div>
 
     <!-- /.row -->
@@ -176,11 +182,17 @@
                             <div class="list-group">
                                 <table class="table table-striped">
                                     <tr>
-                                        <td><b>IPO Date</b></td>
+                                        <td><b>IPO Year</b></td>
                                         <td>
                                             {%if company.ipo_date%}
-                                                {{company.ipo_date}}
+                                                {{company.ipo_date|fmt_date('%Y')}}
                                             {%endif%}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Dividends Paid</b></td>
+                                        <td>
+                                            {{company.dividend|length}}
                                         </td>
                                     </tr>
                                 </table>
@@ -218,7 +230,12 @@
                             <span class="pull-right text-muted"><strong>{{company.ts_updated|time_ago}}</strong></span>
 
                         </a>
+<!--                         <a href="#" class="list-group-item">
+                            <i class="fa fa-comment fa-fw"></i> Dividend to Price
+                            <span class="pull-right text-muted"><strong></strong></span>
 
+                        </a>
+ -->
                     </div>
                     <!-- /.list-group -->
                     <a href="#" class="btn btn-default btn-block">View All Alerts</a>

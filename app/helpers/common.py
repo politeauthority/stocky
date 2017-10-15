@@ -62,6 +62,9 @@ def get_percentage(partial, total, rounding=3):
 def get_db_zip_size():
     file_path = '/opt/stocky/app/static/data/stocky_data.zip'
     if os.path.exists(file_path):
+        size = os.path.getsize(file_path)
+        if size:
+            size = os.path.getsize(file_path) / os.path.getsize(file_path)
         return os.path.getsize(file_path)
     else:
         return 0

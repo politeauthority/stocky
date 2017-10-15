@@ -37,27 +37,31 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        {% if session.get('authenticated') %}
+                {% if session.get('authenticated') %}
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
                             <li><a href="/profile/settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
                             </li>
                             <li class="divider"></li>
                             <li><a href="/auth/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                             </li>
-                        {%else%}
-                            <li><a href="/auth"><i class="fa fa-user fa-fw"></i> Login</a>
-                                </li>
-                        {%endif%}
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                {%else%}
+                    <li class="">
+                        <a href="/auth">
+                            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"> Login</i>
+                        </a>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                {%endif%}
             </ul>
             <!-- /.navbar-top-links -->
 
@@ -68,7 +72,7 @@
                                 <form action="/search" method="POST">
                                     <div class="input-group custom-search-form">
                                         <input type="text" class="form-control" name="search" placeholder="Search...">
-<!--                                         <span class="input-group-btn">
+                                        <!--<span class="input-group-btn">
                                         <input type="button" class="fa fa-search">
                                         <u class="btn btn-default" type="button">
                                             <i class="fa fa-search"></i>
@@ -127,6 +131,12 @@
             </nav>
 
             {%block content%}{%endblock%}
+
+<!--             <div class="row">
+                <div class="col-lg-offset-1 col-lg-12">
+                    <a href="/">Bad-At.life</a> | <a href="/tos">Terms of Service</a>
+                </div>
+            </div> -->
 
             <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

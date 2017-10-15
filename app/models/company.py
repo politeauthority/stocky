@@ -83,6 +83,12 @@ class Company(Base):
 
 
 class CompanyMeta(Base):
+    """
+    CompanyMeta Model.
+    This model allows for storage of strings, ints, dates and pickles by a company_id.
+    The keying "concept" currently is company_id, key, val_type
+
+    """
 
     __tablename__ = 'companies_meta'
 
@@ -114,6 +120,18 @@ class CompanyMeta(Base):
             self.val_pickle = self.value
         elif self.val_type == 'date':
             self.val_date = self.value
+
+        # Update meta data if it exists
+        duplicate_filter = [
+            CompanyMeta.company_id == self.company_id,
+            CompanyMeta.key == self.key,
+            CompanyMeta.val_type == self.val_type
+        ]
+        existing_meta = self.query.filter(duplicate_filter).all()
+        if existing_meta:
+            db.session.commit()
+            return
+
         if not self.id:
             db.session.add(self)
         db.session.commit()

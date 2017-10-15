@@ -112,4 +112,13 @@ def data_structure():
     """
     return render_template('home/data_structure.html')
 
+
+@home.route('tos')
+def tos():
+    """
+    Terms of Service, static page.
+
+    """
+    return render_template('home/tos.html')
+
 # End File: stocky/app/controllers/home.py

@@ -20,16 +20,23 @@ def index(portfolio_id=None):
     """
     Portfolio Index page
 
+    :param portfolio_id: Portforlio.id to display
+    :type portfolio_id: int
     """
     portfolios = Portfolio.query.filter(Portfolio.user_id == session['user_id']).all()
-    if not portfolio_id and portfolios:
+
+    # If user doesnt have a portfolio, prompt them to make one.
+    if not portfolio_id:
         portfolio_id = portfolios[0].id
     else:
         redirect('/portfolio/form')
+
+    # Otherwise load the first, its beta okay?
     info = pc.by_portfolio(portfolio_id)
     companies = {}
     for company_id in info['companies']:
-        companies[company_id] = Company(company_id)
+        companies[company_id] = Company.query.filter(Company.id == company_id).one()
+
     d = {
         'positions': info['positions'],
         'companies': companies,
@@ -39,6 +46,23 @@ def index(portfolio_id=None):
         'portfolios': portfolios
     }
     return render_template('portfolio/index.html', **d)
+
+
+@portfolio.route('/transactions')
+@portfolio.route('/transactions/<portfolio_id>')
+@requires_auth
+def transactions(portfolio_id=None):
+    """
+    Transactions page
+
+    :param portfolio_id: Portforlio.id to be edited or deleted
+    :type portfolio_id: int
+    """
+    transactions = PortfolioEvent.query.filter(PortfolioEvent.portfolio_id == portfolio_id).all()
+    d = {
+        'transactions': transactions
+    }
+    return render_template('portfolio/transactions.html', **d)
 
 
 @portfolio.route('/portfolio/form')
