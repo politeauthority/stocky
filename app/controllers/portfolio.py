@@ -7,6 +7,7 @@ from flask import Blueprint, render_template, request, redirect, session
 from app.collections import companies as cc
 from app.collections import portfolios as pc
 from app.models.portfolio import Portfolio, PortfolioEvent
+from app.models.company import Company
 from app.helpers.decorators import requires_auth
 
 portfolio = Blueprint('Portfolio', __name__, url_prefix='/portfolio')
@@ -26,10 +27,12 @@ def index(portfolio_id=None):
     else:
         redirect('/portfolio/form')
     info = pc.by_portfolio(portfolio_id)
-
+    companies = {}
+    for company_id in info['companies']:
+        companies[company_id] = Company(company_id)
     d = {
         'positions': info['positions'],
-        'companies': info['companies'],
+        'companies': companies,
         'portfolio': info['portfolio'],
         # 'company_qry': company_qry,
         'totals': info['totals'],

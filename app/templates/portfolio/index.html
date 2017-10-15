@@ -118,50 +118,50 @@
         {%endif%}
 
         {%if positions%}
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4>Past Positions</h4>
-                        </div>
-                        <div class="panel-body">
-                            <table class='table table-striped, table-responsive'>
-                                <thead>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Past Positions</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class='table table-striped, table-responsive'>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th class="text-right">Investment</th>
+                                    <th class="text-right">Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for company_id, position in positions.iteritems()%}
+                                    {%if position.num_shares == 0 %}
                                     <tr>
-                                        <th>Company</th>
-                                        <th class="text-right">Investment</th>
-                                        <th class="text-right">Profit</th>
+                                        <td>
+                                        </td>
+                                        <td class="text-right">$ {{position.investment|fmt_currency}}</td>
+                                        <td class="text-right">$ {{position.profit|fmt_currency}}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {%for company_id, position in positions.iteritems()%}
-                                        {%if position.num_shares == 0 %}
-                                        <tr>
-                                            <td>
-                                            </td>
-                                            <td class="text-right">$ {{position.investment|fmt_currency}}</td>
-                                            <td class="text-right">$ {{position.profit|fmt_currency}}</td>
-                                        </tr>
-                                        {%endif%}
-                                    {%endfor%}
-                                </tbody>
-                                <thead>
-                                    <tr>
-                                        <th>Company</th>
-                                        <th class="text-right">Investment</th>
-                                        <th class="text-right">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="text-right">$ {{totals.profit|fmt_currency}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                    {%endif%}
+                                {%endfor%}
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th class="text-right">Investment</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right">$ {{totals.profit|fmt_currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
         {%endif%}
     </div>
 
