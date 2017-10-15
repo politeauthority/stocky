@@ -160,7 +160,7 @@ def import_wiki_prices():
                 dividend.save()
                 print row
                 print "divided son"
-                q.save()
+            q.save()
             calculations.company_flat_stats(company)
             company.save()
             app.logger.info('Saving %s <%s>: %s %s' % (company.name, company.symbol, q.date, q.close))
@@ -203,6 +203,7 @@ if __name__ == "__main__":
     elif args['--test']:
         test()
     elif args['--wiki_prices']:
+        print 'running wiki prices'
         import_wiki_prices()
 
 
