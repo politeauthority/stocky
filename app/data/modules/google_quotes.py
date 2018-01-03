@@ -3,9 +3,12 @@
 """
 import os
 import sys
-import requests
+import time
 from datetime import datetime, timedelta
 import csv
+
+import requests
+from sqlalchemy.orm.exc import NoResultFound
 
 sys.path.append("../../..")
 from app import app
@@ -14,8 +17,6 @@ from app.models.quote import Quote
 from app.helpers import common
 from app.helpers import calculations
 
-
-from sqlalchemy.orm.exc import NoResultFound
 
 download_path = app.config.get('APP_DATA_PATH', '/data/politeauthority/')
 download_path = os.path.join(download_path, 'tmp')
@@ -46,16 +47,31 @@ def all_company_one_year(symbols):
         app.logger.info("<%s> %s" % (company.symbol, company.name))
         app.logger.info("\tWorking %s/%s" % (count, companies_to_run))
 
+        # Check if we're caught up on this companies quotes.
         quotes_to_fetch = company_missing_quotes(company)
-        app.logger.info('Found %s quotes to save' % len(quotes_to_fetch))
-        r = requests.get(base_url % company.symbol)
-        if r.status_code != 200:
-            app.logger.error('Bad Response: %s' % r.status_code)
+        if not len(quotes_to_fetch):
+            app.logger.debug('All caught up on company quotes')
             continue
+        app.logger.info('Found %s quotes to save' % len(quotes_to_fetch))
+
+        # Try to fetch the CSV from google
+        google_csv_url = base_url % company.symbol
+        r = requests.get(google_csv_url)
+        if r.status_code == 403:
+            app.logger.error('Google thinks were spamming, sending to sleep')
+            time.sleep(5)
+
+        if r.status_code != 200:
+            app.logger.error('Bad Response: %s from %s' % (r.status_code, google_csv_url))
+            continue
+
+        # Write the response to disk
         csv_file = os.path.join(download_path, "%s.csv" % company.symbol)
         app.logger.info('Downloading %s' % csv_file)
         with open(csv_file, 'wb') as f:
             f.write(r.content)
+
+        # Read the Response
         reader = list(csv.DictReader(open(csv_file)))
         c = 0
         app.logger.info('Saving Quotes')

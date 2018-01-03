@@ -27,7 +27,7 @@ from sqlalchemy.orm.exc import NoResultFound
 sys.path.append("../..")
 from app import app
 from app.collections import companies as cc
-from app.models.company import Company, CompanyMeta, CompanyDividend
+from app.models.company import Company, CompanyDividend
 from app.models.quote import Quote
 from app.helpers import misc_time
 from app.helpers import calculations
